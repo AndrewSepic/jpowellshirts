@@ -7,42 +7,54 @@ const mockProducts = [
     title: 'Classic Powell Portrait',
     price: 29.99,
     imageUrl: '/images/default.png',
-    description: 'Iconic Jerome Powell portrait on premium cotton tee'
+    description: 'Iconic Jerome Powell portrait on premium cotton tee',
+    printifyProductId: 'mock-prod-001',
+    printifyVariantId: 'mock-var-001'
   },
   {
     id: '2',
     title: 'Transitory Inflation',
     price: 32.99,
     imageUrl: '/images/default2.png',
-    description: 'Remember when inflation was transitory? Commemorate the moment'
+    description: 'Remember when inflation was transitory? Commemorate the moment',
+    printifyProductId: 'mock-prod-002',
+    printifyVariantId: 'mock-var-002'
   },
   {
     id: '3',
     title: 'JPOW Money Printer',
     price: 34.99,
     imageUrl: '/images/default3.png',
-    description: 'The legendary money printer goes BRRR design'
+    description: 'The legendary money printer goes BRRR design',
+    printifyProductId: 'mock-prod-003',
+    printifyVariantId: 'mock-var-003'
   },
   {
     id: '4',
     title: 'Rate Hike Survivor',
     price: 29.99,
     imageUrl: '/images/default2.png',
-    description: 'Survived the 2022-2023 rate hiking cycle'
+    description: 'Survived the 2022-2023 rate hiking cycle',
+    printifyProductId: 'mock-prod-004',
+    printifyVariantId: 'mock-var-004'
   },
   {
     id: '5',
     title: 'Federal Reserve',
     price: 31.99,
     imageUrl: '/images/default3.png',
-    description: 'Classic Federal Reserve logo with Powell signature'
+    description: 'Classic Federal Reserve logo with Powell signature',
+    printifyProductId: 'mock-prod-005',
+    printifyVariantId: 'mock-var-005'
   },
   {
     id: '6',
     title: 'Pivot Season',
     price: 32.99,
     imageUrl: '/images/default.png',
-    description: 'Waiting for the pivot? This shirt understands'
+    description: 'Waiting for the pivot? This shirt understands',
+    printifyProductId: 'mock-prod-006',
+    printifyVariantId: 'mock-var-006'
   }
 ];
 
