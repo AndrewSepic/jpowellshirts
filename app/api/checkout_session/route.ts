@@ -54,7 +54,7 @@ export async function POST(request: Request) {
       line_items,
       mode: 'payment',
       success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/cart`,
+      cancel_url: `${origin}/cart?canceled=true`,
       automatic_tax: { enabled: true },
       shipping_address_collection: {
         allowed_countries: ['US', 'CA', 'GB', 'AU'], // Adjust as needed
@@ -70,7 +70,8 @@ export async function POST(request: Request) {
       },
     });
     
-    return NextResponse.redirect(session.url!, 303)
+    // Return the checkout URL as JSON instead of redirecting
+    return NextResponse.json({ url: session.url })
   } catch (err: any) {
     console.error('Checkout session error:', err)
     return NextResponse.json(

@@ -26,7 +26,7 @@ export default function ProductCard({ id, title, price, imageUrl, description }:
 
         {/* Product Info */}
         <div className="p-4">
-          <h3 className="text-lg font-semibold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">
+          <h3 className="text-lg font-semibold text-gray-900 mb-1 group-hover:text-sky-500 transition-colors">
             {title}
           </h3>
           {description && (
@@ -38,7 +38,7 @@ export default function ProductCard({ id, title, price, imageUrl, description }:
             <span className="text-xl font-bold text-gray-900">
               ${price.toFixed(2)}
             </span>
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
+            <button className="bg-sky-500 text-white px-4 py-2 rounded-lg hover:bg-sky-600 hover:cursor-pointer transition-colors text-sm font-medium">
               View Details
             </button>
           </div>

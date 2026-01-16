@@ -37,8 +37,9 @@ export default function OrderPreviewPage() {
         throw new Error('Failed to create checkout session');
       }
 
-      // The API redirects, so we need to follow it
-      window.location.href = response.url;
+      // Get the checkout URL and redirect to Stripe
+      const { url } = await response.json();
+      window.location.href = url;
     } catch (error) {
       console.error('Checkout error:', error);
       alert('Failed to start checkout. Please try again.');
@@ -126,7 +127,7 @@ export default function OrderPreviewPage() {
               <button
                 onClick={handleCheckout}
                 disabled={isLoading}
-                className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+                className="w-full bg-sky-500 text-white py-3 rounded-lg font-semibold hover:bg-sky-600 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
               >
                 {isLoading ? 'Processing...' : 'Proceed to Checkout'}
               </button>

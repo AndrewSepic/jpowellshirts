@@ -7,9 +7,9 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Brand Section */}
           <div>
-            <h3 className="text-white text-lg font-bold mb-4">Powell Shirts</h3>
+            <h3 className="text-white text-lg font-bold mb-4">J Powell Shirts</h3>
             <p className="text-sm">
-              Premium Jerome Powell themed t-shirts for Federal Reserve enthusiasts.
+              Because if J Powell can stand up to pressure, we can support him. Themed t-shirts for Federal Reserve enthusiasts.
             </p>
           </div>
 

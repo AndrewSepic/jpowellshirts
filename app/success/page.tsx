@@ -1,7 +1,50 @@
 import Link from 'next/link';
-import { Suspense } from 'react';
+import { redirect } from 'next/navigation';
+import { stripe } from '../../lib/stripe';
 
-function SuccessContent() {
+export default async function SuccessPage({ 
+  searchParams 
+}: { 
+  searchParams: Promise<{ session_id?: string }> 
+}) {
+  const { session_id } = await searchParams;
+
+  if (!session_id) {
+    redirect('/');
+  }
+
+  // Retrieve the session from Stripe to verify payment
+  const session = await stripe.checkout.sessions.retrieve(session_id, {
+    expand: ['line_items', 'payment_intent']
+  });
+
+  const { status, customer_details, metadata } = session;
+
+  // If payment is still pending, redirect to home
+  if (status === 'open') {
+    redirect('/');
+  }
+
+  // If payment is not complete, show error
+  if (status !== 'complete') {
+    return (
+      <div className="min-h-screen bg-gray-50 py-12">
+        <div className="container mx-auto px-4 max-w-2xl text-center">
+          <h1 className="text-3xl font-bold text-red-600 mb-4">Payment Failed</h1>
+          <p className="text-gray-600 mb-6">
+            Your payment was not completed. Please try again.
+          </p>
+          <Link href="/cart" className="text-sky-500 hover:underline">
+            Return to Cart
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const customerEmail = customer_details?.email;
+  const orderId = metadata?.orderId;
+
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="container mx-auto px-4 max-w-2xl">
@@ -27,9 +70,22 @@ function SuccessContent() {
           <h1 className="text-3xl font-bold text-gray-900 mb-4">
             Payment Successful!
           </h1>
-          <p className="text-lg text-gray-600 mb-6">
+          <p className="text-lg text-gray-600 mb-2">
             Thank you for your order. Your payment has been processed successfully.
           </p>
+          
+          {orderId && (
+            <p className="text-sm text-gray-500 mb-6">
+              Order ID: <span className="font-mono">{orderId}</span>
+            </p>
+          )}
+
+          {customerEmail && (
+            <p className="text-gray-700 mb-6">
+              A confirmation email will be sent to{' '}
+              <span className="font-semibold">{customerEmail}</span>
+            </p>
+          )}
 
           {/* Order Details */}
           <div className="bg-gray-50 rounded-lg p-6 mb-8 text-left">
@@ -41,19 +97,7 @@ function SuccessContent() {
                 <svg className="w-6 h-6 text-green-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <span>You'll receive an email confirmation shortly with your order details</span>
-              </li>
-              <li className="flex items-start">
-                <svg className="w-6 h-6 text-green-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span>Your order is being processed and will be shipped within 3-5 business days</span>
-              </li>
-              <li className="flex items-start">
-                <svg className="w-6 h-6 text-green-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span>You'll receive tracking information once your order ships</span>
+                <span>Your order is being processed and sent to production</span>
               </li>
             </ul>
           </div>
@@ -62,7 +106,7 @@ function SuccessContent() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/"
-              className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+              className="bg-sky-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-sky-600 transition-colors"
             >
               Continue Shopping
             </Link>
@@ -75,19 +119,7 @@ function SuccessContent() {
           </div>
         </div>
 
-        {/* Additional Info */}
-        <div className="mt-8 text-center text-gray-600">
-          <p>Questions about your order? Contact us at support@powellshirts.com</p>
-        </div>
       </div>
     </div>
-  );
-}
-
-export default function SuccessPage() {
-  return (
-    <Suspense fallback={<div className="min-h-screen bg-gray-50" />}>
-      <SuccessContent />
-    </Suspense>
   );
 }

@@ -15,7 +15,7 @@ export default function About() {
             About Powell Shirts
           </h1>
           <p className="text-xl text-gray-600">
-            Where Monetary Policy Meets Fashion
+            Where Monetary Policy Becomes A Fashion Statement
           </p>
         </div>
 
@@ -80,7 +80,7 @@ export default function About() {
         <div className="text-center mt-12">
           <a
             href="/"
-            className="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+            className="inline-block bg-sky-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-sky-600 transition-colors"
           >
             Shop the Collection
           </a>
