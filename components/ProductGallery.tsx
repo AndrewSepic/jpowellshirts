@@ -1,64 +1,7 @@
 import ProductCard from './ProductCard';
+import { DisplayProduct } from '@/lib/printify';
 
-// Temporary mock data - you'll replace this with Printify API data
-const mockProducts = [
-  {
-    id: '1',
-    title: 'Classic Powell Portrait',
-    price: 29.99,
-    imageUrl: '/images/default.png',
-    description: 'Iconic Jerome Powell portrait on premium cotton tee',
-    printifyProductId: 'mock-prod-001',
-    printifyVariantId: 'mock-var-001'
-  },
-  {
-    id: '2',
-    title: 'Transitory Inflation',
-    price: 32.99,
-    imageUrl: '/images/default2.png',
-    description: 'Remember when inflation was transitory? Commemorate the moment',
-    printifyProductId: 'mock-prod-002',
-    printifyVariantId: 'mock-var-002'
-  },
-  {
-    id: '3',
-    title: 'JPOW Money Printer',
-    price: 34.99,
-    imageUrl: '/images/default3.png',
-    description: 'The legendary money printer goes BRRR design',
-    printifyProductId: 'mock-prod-003',
-    printifyVariantId: 'mock-var-003'
-  },
-  {
-    id: '4',
-    title: 'Rate Hike Survivor',
-    price: 29.99,
-    imageUrl: '/images/default2.png',
-    description: 'Survived the 2022-2023 rate hiking cycle',
-    printifyProductId: 'mock-prod-004',
-    printifyVariantId: 'mock-var-004'
-  },
-  {
-    id: '5',
-    title: 'Federal Reserve',
-    price: 31.99,
-    imageUrl: '/images/default3.png',
-    description: 'Classic Federal Reserve logo with Powell signature',
-    printifyProductId: 'mock-prod-005',
-    printifyVariantId: 'mock-var-005'
-  },
-  {
-    id: '6',
-    title: 'Pivot Season',
-    price: 32.99,
-    imageUrl: '/images/default.png',
-    description: 'Waiting for the pivot? This shirt understands',
-    printifyProductId: 'mock-prod-006',
-    printifyVariantId: 'mock-var-006'
-  }
-];
-
-export default function ProductGallery() {
+export default function ProductGallery({ products } :{products: DisplayProduct[]}) {
   return (
     <div className="py-12">
       <div className="container mx-auto px-4">
@@ -74,7 +17,7 @@ export default function ProductGallery() {
 
         {/* Product Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {mockProducts.map((product) => (
+          {products.map((product) => (
             <ProductCard
               key={product.id}
               id={product.id}
@@ -87,7 +30,7 @@ export default function ProductGallery() {
         </div>
 
         {/* Empty State (for when no products) */}
-        {mockProducts.length === 0 && (
+        {products.length === 0 && (
           <div className="text-center py-12">
             <p className="text-gray-500 text-lg">No products available at the moment.</p>
           </div>

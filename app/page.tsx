@@ -1,9 +1,16 @@
 import ProductGallery from '@/components/ProductGallery';
+import { getProducts, transformProductForDisplay } from '@/lib/printify';
 
-export default function Home() {
+export default async function Home() {
+
+	const products = await getProducts();
+
+	const enabledProducts = products.map(transformProductForDisplay);
+	
+
   return (
     <div className="min-h-screen bg-gray-50">
-      <ProductGallery />
+      <ProductGallery products={enabledProducts} />
     </div>
   );
 }

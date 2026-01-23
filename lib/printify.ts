@@ -4,26 +4,54 @@
 const PRINTIFY_API_URL = 'https://api.printify.com/v1';
 const USE_MOCK_DATA = !process.env.PRINTIFY_API_TOKEN; // Auto-detect if we should use mocks
 
-interface PrintifyProduct {
+export interface PrintifyProduct {
   id: string;
   title: string;
   description: string;
   tags: string[];
   variants: PrintifyVariant[];
   images: PrintifyImage[];
+  options: PrintifyOption[];
 }
 
-interface PrintifyVariant {
+export interface PrintifyOption {
+  name: string;
+  type: string;
+  values: Array<{id: number; title: string}>;
+  display_in_preview?: boolean;
+}
+
+export interface PrintifyVariant {
   id: number;
   title: string;
   price: number;
   is_enabled: boolean;
+  options: number[]; // Array of option value IDs [colorId, sizeId]
+  cost: number;
+  grams?: number;
+  is_available: boolean;
+  is_default: boolean;
+  sku?: string;
+  quantity?: number;
 }
 
-interface PrintifyImage {
+export interface PrintifyImage {
   src: string;
   position: string;
   is_default: boolean;
+  variant_ids: number[]; // Which variants this image applies to
+  is_selected_for_publishing?: boolean;
+  order?: number | null;
+}
+
+export interface DisplayProduct {
+  id: string;
+  title: string;
+  price: number;
+  imageUrl: string;
+  description: string;
+  printifyProductId: string;
+  fullProduct: PrintifyProduct;
 }
 
 interface PrintifyOrderItem {
@@ -61,6 +89,15 @@ const MOCK_PRODUCTS: PrintifyProduct[] = [
     ],
     images: [
       { src: '/images/default.png', position: 'front', is_default: true }
+    ],
+    options: [
+      { name: 'Sizes', type: 'size', values: [
+        { id: 1, title: 'S' },
+        { id: 2, title: 'M' },
+        { id: 3, title: 'L' },
+        { id: 4, title: 'XL' },
+        { id: 5, title: '2XL' }
+      ]}
     ]
   },
   // Add more mock products as needed
@@ -128,6 +165,121 @@ export async function getProduct(productId: string): Promise<PrintifyProduct | n
     console.error('Failed to fetch Printify product:', error);
     return null;
   }
+}
+
+/**
+ * Utility: Get only enabled variants from a product
+ */
+export function getEnabledVariants(product: PrintifyProduct): PrintifyVariant[] {
+  return product.variants.filter(v => v.is_enabled);
+}
+
+/**
+ * Utility: Get minimum price from enabled variants (in dollars)
+ */
+export function getMinPrice(product: PrintifyProduct): number {
+  const enabledVariants = getEnabledVariants(product);
+  if (enabledVariants.length === 0) return 0;
+  return Math.min(...enabledVariants.map(v => v.price)) / 100;
+}
+
+/**
+ * Utility: Get default or first available image
+ */
+export function getDefaultImage(product: PrintifyProduct): string {
+  return product.images.find(img => img.is_default)?.src 
+    || product.images[0]?.src 
+    || '/images/default.png';
+}
+
+/**
+ * Utility: Extract sizes from product options
+ */
+export function getUniqueSizes(product: PrintifyProduct): string[] {
+  const sizeOption = product.options?.find(opt => opt.type === 'size');
+  if (!sizeOption) return [];
+  return sizeOption.values.map(v => v.title);
+}
+
+/**
+ * Utility: Get only sizes that have enabled variants
+ */
+export function getAvailableSizes(product: PrintifyProduct): string[] {
+  const enabledVariants = getEnabledVariants(product);
+  const sizeOption = product.options?.find(opt => opt.type === 'size');
+  if (!sizeOption) return [];
+  
+  const availableSizeIds = new Set(
+    enabledVariants.map(v => v.options[1]) // Size is typically second option
+  );
+  
+  return sizeOption.values
+    .filter(size => availableSizeIds.has(size.id))
+    .map(size => size.title);
+}
+
+/**
+ * Utility: Get color options from product
+ */
+export function getColorOptions(product: PrintifyProduct) {
+  const colorOption = product.options?.find(opt => opt.type === 'color');
+  if (!colorOption) return [];
+  return colorOption.values;
+}
+
+/**
+ * Utility: Get only color options that have enabled variants
+ */
+export function getAvailableColorOptions(product: PrintifyProduct) {
+  const enabledVariants = getEnabledVariants(product);
+  const colorOption = product.options?.find(opt => opt.type === 'color');
+  if (!colorOption) return [];
+  
+  const availableColorIds = new Set(
+    enabledVariants.map(v => v.options[0]) // Color is typically first option
+  );
+  
+  return colorOption.values.filter(color => availableColorIds.has(color.id));
+}
+
+/**
+ * Utility: Get images for a specific variant
+ */
+export function getImagesForVariant(product: PrintifyProduct, variantId: number): PrintifyImage[] {
+  return product.images.filter(img => img.variant_ids.includes(variantId));
+}
+
+/**
+ * Utility: Find variant by color and size option IDs
+ */
+export function findVariantByOptions(
+  product: PrintifyProduct, 
+  colorId: number | null, 
+  sizeId: number | null
+): PrintifyVariant | null {
+  const enabledVariants = getEnabledVariants(product);
+  
+  return enabledVariants.find(variant => {
+    const [variantColorId, variantSizeId] = variant.options;
+    const colorMatch = colorId === null || variantColorId === colorId;
+    const sizeMatch = sizeId === null || variantSizeId === sizeId;
+    return colorMatch && sizeMatch;
+  }) || null;
+}
+
+/**
+ * Transform Printify product to display format for ProductCard
+ */
+export function transformProductForDisplay(product: PrintifyProduct): DisplayProduct {
+  return {
+    id: product.id,
+    title: product.title,
+    price: getMinPrice(product),
+    imageUrl: getDefaultImage(product),
+    description: product.description,
+    printifyProductId: product.id,
+    fullProduct: product
+  };
 }
 
 /**
