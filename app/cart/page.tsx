@@ -2,24 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-
-// Mock cart data - in production, this would come from state management or cookies
-const mockCartItems = [
-  {
-    id: '1',
-    title: 'Classic Powell Portrait',
-    price: 29.99,
-    quantity: 1,
-    imageUrl: '/images/default.png',
-    printifyProductId: 'mock-prod-001',
-    printifyVariantId: 'mock-var-001'
-  }
-];
+import { useCart } from '@/providers/CartContext';
 
 export default function OrderPreviewPage() {
   const searchParams = useSearchParams();
   const canceled = searchParams.get('canceled');
   const [isLoading, setIsLoading] = useState(false);
+  const { getTotal, items, updateQuantity, removeItem } = useCart();
 
   const handleCheckout = async () => {
     setIsLoading(true);
@@ -30,7 +19,7 @@ export default function OrderPreviewPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ items: mockCartItems }),
+        body: JSON.stringify({ items: items }),
       });
 
       if (!response.ok) {
@@ -47,7 +36,7 @@ export default function OrderPreviewPage() {
     }
   };
 
-  const subtotal = mockCartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const subtotal = getTotal();
   const shipping = 0; // Calculated by Stripe
   const total = subtotal + shipping;
 
@@ -73,18 +62,48 @@ export default function OrderPreviewPage() {
               <h2 className="text-xl font-semibold text-gray-900 mb-4">Your Items</h2>
               
               <div className="space-y-4">
-                {mockCartItems.map((item) => (
-                  <div key={item.id} className="flex gap-4 pb-4 border-b border-gray-200 last:border-0">
+                {items.map((item) => (
+                  <div key={`${item.productId}-${item.variantId}`} className="flex gap-4 pb-4 border-b border-gray-200 last:border-0">
                     <div className="w-20 h-20 bg-gray-100 rounded flex-shrink-0">
                       <img 
                         src={item.imageUrl} 
-                        alt={item.title}
+                        alt={item.productTitle}
                         className="w-full h-full object-cover rounded"
                       />
                     </div>
                     <div className="flex-grow">
-                      <h3 className="font-semibold text-gray-900">{item.title}</h3>
-                      <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
+                      <h3 className="font-semibold text-gray-900">{item.productTitle}</h3>
+                      <p className="text-sm text-gray-600">{item.colorName} / {item.sizeName}</p>
+                      <p className="text-sm text-gray-600 mt-1">${item.price.toFixed(2)} each</p>
+                      
+                      {/* Quantity Controls */}
+                      <div className="flex items-center gap-2 mt-2">
+                        <button
+                          onClick={() => updateQuantity(item.productId, item.variantId, item.quantity - 1)}
+                          className="w-8 h-8 rounded border border-gray-300 hover:bg-gray-100 flex items-center justify-center"
+                          aria-label="Decrease quantity"
+                        >
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                          </svg>
+                        </button>
+                        <span className="w-8 text-center font-medium">{item.quantity}</span>
+                        <button
+                          onClick={() => updateQuantity(item.productId, item.variantId, item.quantity + 1)}
+                          className="w-8 h-8 rounded border border-gray-300 hover:bg-gray-100 flex items-center justify-center"
+                          aria-label="Increase quantity"
+                        >
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => removeItem(item.productId, item.variantId)}
+                          className="ml-4 text-red-600 hover:text-red-700 text-sm font-medium"
+                        >
+                          Remove
+                        </button>
+                      </div>
                     </div>
                     <div className="text-right">
                       <p className="font-semibold text-gray-900">

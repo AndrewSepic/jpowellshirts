@@ -1,6 +1,7 @@
 'use client';
 
 import { PrintifyOption } from '@/lib/printify';
+import { getColorHex } from '@/lib/colorMap';
 
 interface VariantSelectorProps {
   colorOptions: Array<{id: number; title: string}>;
@@ -36,10 +37,11 @@ export default function VariantSelector({
               </span>
             )}
           </label>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-3">
             {colorOptions.map((color) => {
               const isAvailable = !availableColorIds || availableColorIds.includes(color.id);
               const isSelected = selectedColorId === color.id;
+              const hexColor = getColorHex(color.title);
               
               return (
                 <button
@@ -47,16 +49,22 @@ export default function VariantSelector({
                   onClick={() => onColorChange(color.id)}
                   disabled={!isAvailable}
                   className={`
-                    px-4 py-2 rounded-lg border-2 font-medium transition-all text-sm pointer
+                    relative w-5 h-5 rounded-full transition-all
                     ${isSelected 
-                      ? 'border-sky-500 bg-sky-50 text-sky-700' 
-                      : 'border-gray-300 hover:border-gray-400 text-gray-700'
+                      ? 'ring-2 ring-sky-500 ring-offset-2' 
+                      : 'ring-2 ring-gray-300 hover:ring-gray-400'
                     }
                     ${!isAvailable ? 'opacity-40 cursor-not-allowed' : ''}
                   `}
                   title={color.title}
-                >
-                  {color.title}
+                  style={{ backgroundColor: hexColor }}
+                > 
+                  {/* Diagonal line for unavailable */}
+                  {!isAvailable && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-full h-0.5 bg-red-500 rotate-45" />
+                    </div>
+                  )}
                 </button>
               );
             })}

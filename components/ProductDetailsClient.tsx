@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import ProductImageCarousel from '@/components/ProductImageCarousel';
 import VariantSelector from '@/components/VariantSelector';
+import { useCart } from '@/providers/CartContext';
 import { 
   PrintifyProduct, 
   getAvailableColorOptions,
@@ -19,6 +21,8 @@ interface ProductDetailsClientProps {
 }
 
 export default function ProductDetailsClient({ product }: ProductDetailsClientProps) {
+  const router = useRouter();
+  const { addItem } = useCart();
   const colorOptions = getAvailableColorOptions(product);
   const sizeOptions = getAvailableSizes(product);
   const enabledVariants = getEnabledVariants(product);
@@ -78,6 +82,32 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
     ? (currentVariant.price / 100).toFixed(2)
     : getMinPrice(product).toFixed(2);
   
+  const handleAddToCart = () => {
+    if (!currentVariant || !selectedColorId || !selectedSize) return;
+
+    const colorOption = colorOptions.find(c => c.id === selectedColorId);
+    const imageUrl = displayImages[0]?.src || product.images[0]?.src || '';
+
+    addItem({
+      productId: product.id,
+      variantId: currentVariant.id,
+      productTitle: product.title,
+      variantTitle: currentVariant.title,
+      price: currentVariant.price / 100,
+      imageUrl,
+      colorName: colorOption?.title,
+      sizeName: selectedSize,
+    });
+
+    // Optional: Show a success message or redirect to cart
+    router.push('/cart');
+  };
+
+  const handleBuyNow = () => {
+    handleAddToCart();
+    // Will redirect to cart, which can then go to checkout
+  };
+
   const canAddToCart = selectedColorId !== null && selectedSize !== null && currentVariant !== null;
 
   return (
@@ -128,6 +158,7 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
         {/* Add to Cart Button */}
         <div className="mt-8 space-y-4">
           <button 
+            onClick={handleAddToCart}
             className={`w-full py-4 rounded-lg font-semibold text-lg transition-colors ${
               canAddToCart
                 ? 'bg-sky-500 text-white hover:bg-sky-600'
@@ -139,47 +170,17 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
           </button>
 
           {/* Quick Checkout */}
-          <Link 
-            href="/cart"
+          <button
+            onClick={handleBuyNow}
             className={`block w-full py-4 rounded-lg font-semibold text-lg text-center transition-colors ${
               canAddToCart
                 ? 'bg-gray-800 text-white hover:bg-gray-900'
-                : 'bg-gray-200 text-gray-400 cursor-not-allowed pointer-events-none'
+                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
             }`}
+            disabled={!canAddToCart}
           >
             Buy Now
-          </Link>
-        </div>
-
-        {/* Product Features */}
-        <div className="mt-8 pt-6 border-t border-gray-200">
-          <h3 className="font-semibold text-gray-900 mb-3">Features:</h3>
-          <ul className="space-y-2 text-sm text-gray-700">
-            <li className="flex items-center">
-              <svg className="w-5 h-5 text-green-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
-              Premium quality print
-            </li>
-            <li className="flex items-center">
-              <svg className="w-5 h-5 text-green-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
-              Soft, comfortable fabric
-            </li>
-            <li className="flex items-center">
-              <svg className="w-5 h-5 text-green-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
-              Made to order
-            </li>
-            <li className="flex items-center">
-              <svg className="w-5 h-5 text-green-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
-              Sustainable production
-            </li>
-          </ul>
+          </button>
         </div>
       </div>
     </div>
