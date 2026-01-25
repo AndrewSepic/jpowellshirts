@@ -12,6 +12,11 @@ export interface PrintifyProduct {
   variants: PrintifyVariant[];
   images: PrintifyImage[];
   options: PrintifyOption[];
+  is_locked?: boolean;
+  external?: {
+    id: string;
+    handle: string;
+  };
 }
 
 export interface PrintifyOption {
@@ -71,6 +76,29 @@ interface PrintifyShippingAddress {
   address2?: string;
   city: string;
   zip: string;
+}
+
+interface PrintifyShippingCosts {
+  standard?: number;
+  express?: number;
+  priority?: number;
+  printify_express?: number;
+  economy?: number;
+}
+
+interface PrintifyShippingLineItem {
+  product_id: string;
+  variant_id: number;
+  quantity: number;
+  external_id?: string;
+}
+
+export interface ShippingResponse {
+ 	standard: number,
+    express: number,
+    priority: number,
+    printify_express: number,
+    economy: number,
 }
 
 // Mock data for testing without API access
@@ -280,6 +308,61 @@ export function transformProductForDisplay(product: PrintifyProduct): DisplayPro
     printifyProductId: product.id,
     fullProduct: product
   };
+}
+
+/**
+ * Calculate shipping costs for an order
+ */
+export async function calculateShipping(
+  lineItems: PrintifyShippingLineItem[],
+  address: PrintifyShippingAddress
+): Promise<PrintifyShippingCosts> {
+  if (USE_MOCK_DATA) {
+    console.log('🔧 Using mock shipping costs');
+    return {
+      standard: 500,
+      economy: 399,
+      express: 1200,
+    };
+  }
+
+  try {
+    const shopId = process.env.PRINTIFY_SHOP_ID;
+    const url = `${PRINTIFY_API_URL}/shops/${shopId}/orders/shipping.json`;
+    
+    console.log('Printify shipping URL:', url);
+    console.log('Shop ID:', shopId);
+    console.log('Request body:', JSON.stringify({
+      line_items: lineItems,
+      address_to: address,
+    }, null, 2));
+    
+    const response = await fetch(
+      url,
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${process.env.PRINTIFY_API_TOKEN}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          line_items: lineItems,
+          address_to: address,
+        }),
+      }
+    );
+	console.log("res", response)
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`Printify shipping calculation failed: ${JSON.stringify(errorData)}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Failed to calculate shipping:', error);
+    throw error;
+  }
 }
 
 /**

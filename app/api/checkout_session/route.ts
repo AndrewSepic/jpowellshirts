@@ -3,16 +3,21 @@ import { headers } from 'next/headers'
 
 import { stripe } from '../../../lib/stripe'
 import { generateOrderId } from '../../../lib/utils'
+import type { ShippingAddress } from '@/app/cart/page'
 
 interface CartItem {
-  id: string;
-  title: string;
+  productId: string;
+  variantId: number;
+  productTitle: string;
+  variantTitle: string;
   price: number;
-  quantity: number;
   imageUrl: string;
-  printifyProductId?: string;
-  printifyVariantId?: string;
+  colorName?: string;
+  sizeName?: string;
+  quantity: number;
 }
+
+
 
 export async function POST(request: Request) {
   try {
@@ -20,7 +25,12 @@ export async function POST(request: Request) {
     const origin = headersList.get('origin')
     
     // Get cart items from request body
-    const { items }: { items: CartItem[] } = await request.json()
+    const { items, shippingCost, shippingAddress, shippingMethod }: 
+	{ 
+		items: CartItem[], 
+		shippingCost: Number, 
+		shippingAddress: ShippingAddress,
+		shippingMethod: String } = await request.json()
     
     if (!items || items.length === 0) {
       return NextResponse.json(
@@ -31,23 +41,37 @@ export async function POST(request: Request) {
 
     // Generate unique order ID
     const orderId = generateOrderId()
-
     // Create line items for Stripe
     const line_items = items.map(item => ({
       price_data: {
         currency: 'usd',
         product_data: {
-          name: item.title,
+          name: `${item.productTitle} - ${item.variantTitle}`,
           images: [item.imageUrl.startsWith('http') ? item.imageUrl : `${origin}${item.imageUrl}`],
           metadata: {
-            printifyProductId: item.printifyProductId || 'mock',
-            printifyVariantId: item.printifyVariantId || 'mock',
+            printifyProductId: item.productId,
+            printifyVariantId: item.variantId.toString(),
           }
         },
         unit_amount: Math.round(item.price * 100), // Convert to cents
       },
       quantity: item.quantity,
     }))
+
+    // Add shipping as a line item
+    if (shippingCost) {
+      line_items.push({
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: `Shipping - ${shippingMethod}`,
+            description: `Delivery to ${shippingAddress.city}, ${shippingAddress.region}`,
+          },
+          unit_amount: Math.round(Number(shippingCost) * 100), // Convert to cents
+        },
+        quantity: 1,
+      })
+    }
 
     // Create Checkout Session
     const session = await stripe.checkout.sessions.create({
@@ -56,17 +80,17 @@ export async function POST(request: Request) {
       success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/cart?canceled=true`,
       automatic_tax: { enabled: true },
-      shipping_address_collection: {
-        allowed_countries: ['US', 'CA', 'GB', 'AU'], // Adjust as needed
-      },
+      billing_address_collection: 'required',
       metadata: {
         orderId,
         items: JSON.stringify(items.map(item => ({
-          id: item.id,
-          printifyProductId: item.printifyProductId || 'mock',
-          printifyVariantId: item.printifyVariantId || 'mock',
+          id: item.productId,
+          printifyProductId: item.productId || 'mock',
+          printifyVariantId: item.variantId || 'mock',
           quantity: item.quantity,
         }))),
+        shippingMethod: String(shippingMethod),
+        shippingAddress: JSON.stringify(shippingAddress),
       },
     });
     

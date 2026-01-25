@@ -1,8 +1,18 @@
 // Printify color name to hex code mapping
 // Fill in the hex values for each color
 export const PRINTIFY_COLOR_MAP: Record<string, string> = {
+  'Graphite': '#373231',
+  'Granite': '#8a8e90',
   'Black': '#000000',
   'White': '#FFFFFF',
+  'Brick': '#915c5c',
+  'Terracotta': '#db8c76',
+  'Bananna': '#ffecb9',
+  'Bay': '#c3cfc1',
+  'Seafoam': '#609a95',
+  'Ice Blue': '#7b8e95',
+  'Denim': '#4e5064',
+  'Crimson': '#b66a74',
   'Navy': '',
   'Red': '',
   'Royal Blue': '',

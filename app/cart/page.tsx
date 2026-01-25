@@ -1,16 +1,96 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useCart } from '@/providers/CartContext';
+import ShippingAddressForm from '@/components/ShippingAddressForm';
+import ShippingMethodSelector from '@/components/ShippingMethodSelector';
+
+export interface ShippingAddress {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  country: string;
+  region: string;
+  address1: string;
+  address2?: string;
+  city: string;
+  zip: string;
+}
 
 export default function OrderPreviewPage() {
   const searchParams = useSearchParams();
   const canceled = searchParams.get('canceled');
   const [isLoading, setIsLoading] = useState(false);
+  const [isCalculatingShipping, setIsCalculatingShipping] = useState(false);
+  const [shippingAddress, setShippingAddress] = useState<ShippingAddress | null>(null);
+  const [shippingMethods, setShippingMethods] = useState<Record<string, { cost: number; costCents: number }>>({});
+  const [selectedShippingMethod, setSelectedShippingMethod] = useState<string | null>(null);
+  const [shippingCost, setShippingCost] = useState(0);
   const { getTotal, items, updateQuantity, removeItem } = useCart();
+  const shippingMethodsRef = useRef<HTMLDivElement>(null);
+
+  const handleAddressComplete = async (address: ShippingAddress) => {
+    setShippingAddress(address);
+    setIsCalculatingShipping(true);
+
+    try {
+      // Transform cart items to Printify line items format
+      const lineItems = items.map(item => ({
+        product_id: item.productId,
+        variant_id: item.variantId,
+        quantity: item.quantity,
+      }));
+
+      const response = await fetch('/api/calculate-shipping', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ lineItems, address }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to calculate shipping');
+      }
+
+      const methods = await response.json();
+      setShippingMethods(methods);
+      
+      // Auto-select economy shipping if available
+      if (methods.economy) {
+        setSelectedShippingMethod('economy');
+        setShippingCost(methods.economy.cost);
+      } else if (Object.keys(methods).length > 0) {
+        const firstMethod = Object.keys(methods)[0];
+        setSelectedShippingMethod(firstMethod);
+        setShippingCost(methods[firstMethod].cost);
+      }
+      
+      // Scroll to shipping methods after they load
+      setTimeout(() => {
+        shippingMethodsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 100);
+    } catch (error) {
+      console.error('Shipping calculation error:', error);
+      alert('Failed to calculate shipping. Please try again.');
+    } finally {
+      setIsCalculatingShipping(false);
+    }
+  };
+
+  const handleShippingMethodSelect = (method: string, costCents: number) => {
+    setSelectedShippingMethod(method);
+    setShippingCost(costCents / 100);
+  };
 
   const handleCheckout = async () => {
+    if (!shippingAddress || !selectedShippingMethod) {
+      alert('Please enter shipping address and select a shipping method');
+      return;
+    }
+
     setIsLoading(true);
     
     try {
@@ -19,7 +99,12 @@ export default function OrderPreviewPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ items: items }),
+        body: JSON.stringify({ 
+          items: items,
+          shippingAddress,
+          shippingMethod: selectedShippingMethod,
+          shippingCost: shippingCost,
+        }),
       });
 
       if (!response.ok) {
@@ -37,8 +122,7 @@ export default function OrderPreviewPage() {
   };
 
   const subtotal = getTotal();
-  const shipping = 0; // Calculated by Stripe
-  const total = subtotal + shipping;
+  const total = subtotal + shippingCost;
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
@@ -56,8 +140,9 @@ export default function OrderPreviewPage() {
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Order Preview</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Cart Items */}
-          <div className="lg:col-span-2">
+          {/* Left Column: Cart Items & Shipping */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Cart Items */}
             <div className="bg-white rounded-lg shadow-md p-6">
               <h2 className="text-xl font-semibold text-gray-900 mb-4">Your Items</h2>
               
@@ -114,6 +199,26 @@ export default function OrderPreviewPage() {
                 ))}
               </div>
             </div>
+
+            {/* Shipping Address Form */}
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">Shipping Address</h2>
+              <ShippingAddressForm 
+                onAddressConfirmed={handleAddressComplete}
+                isCalculating={isCalculatingShipping}
+              />
+            </div>
+
+            {/* Shipping Methods */}
+            {Object.keys(shippingMethods).length > 0 && (
+              <div ref={shippingMethodsRef} className="bg-white rounded-lg shadow-md p-6">
+                <ShippingMethodSelector
+                  methods={shippingMethods}
+                  selectedMethod={selectedShippingMethod}
+                  onMethodSelect={handleShippingMethodSelect}
+                />
+              </div>
+            )}
           </div>
 
           {/* Order Summary & Checkout */}
@@ -128,7 +233,7 @@ export default function OrderPreviewPage() {
                 </div>
                 <div className="flex justify-between text-gray-700">
                   <span>Shipping</span>
-                  <span>Calculated at checkout</span>
+                  <span>{shippingCost > 0 ? `$${shippingCost.toFixed(2)}` : 'Enter address'}</span>
                 </div>
                 <div className="flex justify-between text-gray-700">
                   <span>Tax</span>
@@ -137,7 +242,7 @@ export default function OrderPreviewPage() {
                 <div className="border-t border-gray-200 pt-3">
                   <div className="flex justify-between text-lg font-bold text-gray-900">
                     <span>Total</span>
-                    <span>${total.toFixed(2)}+</span>
+                    <span>${total.toFixed(2)}{shippingCost === 0 ? '+' : ''}</span>
                   </div>
                 </div>
               </div>
@@ -145,7 +250,7 @@ export default function OrderPreviewPage() {
               {/* Checkout Button */}
               <button
                 onClick={handleCheckout}
-                disabled={isLoading}
+                disabled={isLoading || !shippingAddress || !selectedShippingMethod}
                 className="w-full bg-sky-500 text-white py-3 rounded-lg font-semibold hover:bg-sky-600 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
               >
                 {isLoading ? 'Processing...' : 'Proceed to Checkout'}
