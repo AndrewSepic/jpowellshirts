@@ -56,28 +56,24 @@ export async function POST(request: Request) {
   }
 
   // Handle the event
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object as Stripe.Checkout.Session;
+  if (event.type === 'payment_intent.succeeded') {
+    const paymentIntent = event.data.object as Stripe.PaymentIntent;
 
-    console.log('💳 Payment successful:', session.id);
+    console.log('💳 Payment successful:', paymentIntent.id);
 
-    // Extract order data from session metadata
-    const orderId = session.metadata?.orderId;
-    const itemsJson = session.metadata?.items;
+    // Extract order data from payment intent metadata
+    const orderId = paymentIntent.metadata?.orderId;
+    const itemsJson = paymentIntent.metadata?.items;
+    const shippingAddressJson = paymentIntent.metadata?.shippingAddress;
+    const shippingMethod = paymentIntent.metadata?.shippingMethod;
 
-    if (!orderId || !itemsJson) {
-      console.error('Missing order data in session metadata');
+    if (!orderId || !itemsJson || !shippingAddressJson) {
+      console.error('Missing order data in payment intent metadata');
       return NextResponse.json({ error: 'Missing metadata' }, { status: 400 });
     }
 
     const items = JSON.parse(itemsJson);
-    const shippingDetails = session.shipping_details;
-
-    if (!shippingDetails) {
-      console.error('Missing shipping details');
-      logFailedOrder(orderId, session.id, 'Missing shipping details', { items });
-      return NextResponse.json({ error: 'Missing shipping' }, { status: 400 });
-    }
+    const shippingAddress = JSON.parse(shippingAddressJson);
 
     // Prepare Printify order data
     const printifyItems = items.map((item: any) => ({
@@ -86,23 +82,24 @@ export async function POST(request: Request) {
       quantity: item.quantity,
     }));
 
-    const shippingAddress = {
-      first_name: shippingDetails.name?.split(' ')[0] || 'Customer',
-      last_name: shippingDetails.name?.split(' ').slice(1).join(' ') || '',
-      email: session.customer_details?.email || '',
-      phone: session.customer_details?.phone || '',
-      country: shippingDetails.address?.country || '',
-      region: shippingDetails.address?.state || '',
-      address1: shippingDetails.address?.line1 || '',
-      address2: shippingDetails.address?.line2 || '',
-      city: shippingDetails.address?.city || '',
-      zip: shippingDetails.address?.postal_code || '',
+    // Format address for Printify (address already in correct format from cart)
+    const printifyAddress = {
+      first_name: shippingAddress.first_name,
+      last_name: shippingAddress.last_name,
+      email: shippingAddress.email,
+      phone: shippingAddress.phone,
+      country: shippingAddress.country,
+      region: shippingAddress.region,
+      address1: shippingAddress.address1,
+      address2: shippingAddress.address2 || '',
+      city: shippingAddress.city,
+      zip: shippingAddress.zip,
     };
 
     try {
       // Create order in Printify
       console.log('📦 Creating Printify order for:', orderId);
-      const printifyOrder = await createOrder(orderId, printifyItems, shippingAddress);
+      const printifyOrder = await createOrder(orderId, printifyItems, printifyAddress);
       
       // Submit to production
       console.log('🏭 Submitting to production:', printifyOrder.id);
@@ -111,9 +108,9 @@ export async function POST(request: Request) {
       console.log('✅ Order successfully sent to Printify:', orderId);
     } catch (error: any) {
       console.error('Failed to process Printify order:', error);
-      logFailedOrder(orderId, session.id, error.message, {
+      logFailedOrder(orderId, paymentIntent.id, error.message, {
         items: printifyItems,
-        shippingAddress,
+        shippingAddress: printifyAddress,
       });
     }
   }

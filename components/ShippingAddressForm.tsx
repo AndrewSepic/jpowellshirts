@@ -179,7 +179,7 @@ export default function ShippingAddressForm({ onAddressConfirmed, isCalculating 
         className={`w-full py-3 rounded-lg font-semibold transition-colors ${
           isCalculating
             ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-            : 'bg-sky-500 text-white hover:bg-sky-600'
+            : 'bg-sky-500 text-white hover:bg-sky-600 cursor-pointer'
         }`}
       >
         {isCalculating ? 'Calculating Shipping...' : 'Calculate Shipping'}

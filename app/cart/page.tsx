@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useCart } from '@/providers/CartContext';
 import ShippingAddressForm from '@/components/ShippingAddressForm';
 import ShippingMethodSelector from '@/components/ShippingMethodSelector';
@@ -29,6 +29,7 @@ export default function OrderPreviewPage() {
   const [selectedShippingMethod, setSelectedShippingMethod] = useState<string | null>(null);
   const [shippingCost, setShippingCost] = useState(0);
   const { getTotal, items, updateQuantity, removeItem } = useCart();
+  const router = useRouter();
   const shippingMethodsRef = useRef<HTMLDivElement>(null);
 
   const handleAddressComplete = async (address: ShippingAddress) => {
@@ -91,34 +92,18 @@ export default function OrderPreviewPage() {
       return;
     }
 
-    setIsLoading(true);
-    
-    try {
-      const response = await fetch('/api/checkout_session', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          items: items,
-          shippingAddress,
-          shippingMethod: selectedShippingMethod,
-          shippingCost: shippingCost,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to create checkout session');
-      }
-
-      // Get the checkout URL and redirect to Stripe
-      const { url } = await response.json();
-      window.location.href = url;
-    } catch (error) {
-      console.error('Checkout error:', error);
-      alert('Failed to start checkout. Please try again.');
-      setIsLoading(false);
+    // Store checkout data in session storage for the checkout page
+    const checkoutData = {
+      items,
+      shippingAddress,
+      shippingMethod: selectedShippingMethod,
+      shippingCost,
     }
+    
+    sessionStorage.setItem('checkoutData', JSON.stringify(checkoutData))
+    
+    // Navigate to checkout page
+    router.push('/checkout')
   };
 
   const subtotal = getTotal();
@@ -165,7 +150,7 @@ export default function OrderPreviewPage() {
                       <div className="flex items-center gap-2 mt-2">
                         <button
                           onClick={() => updateQuantity(item.productId, item.variantId, item.quantity - 1)}
-                          className="w-8 h-8 rounded border border-gray-300 hover:bg-gray-100 flex items-center justify-center"
+                          className="w-8 h-8 rounded border border-gray-300 hover:bg-gray-100 flex items-center justify-center cursor-pointer"
                           aria-label="Decrease quantity"
                         >
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -175,7 +160,7 @@ export default function OrderPreviewPage() {
                         <span className="w-8 text-center font-medium">{item.quantity}</span>
                         <button
                           onClick={() => updateQuantity(item.productId, item.variantId, item.quantity + 1)}
-                          className="w-8 h-8 rounded border border-gray-300 hover:bg-gray-100 flex items-center justify-center"
+                          className="w-8 h-8 rounded border border-gray-300 hover:bg-gray-100 flex items-center justify-center cursor-pointer"
                           aria-label="Increase quantity"
                         >
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -184,7 +169,7 @@ export default function OrderPreviewPage() {
                         </button>
                         <button
                           onClick={() => removeItem(item.productId, item.variantId)}
-                          className="ml-4 text-red-600 hover:text-red-700 text-sm font-medium"
+                          className="ml-4 text-red-600 hover:text-red-700 text-sm font-medium cursor-pointer"
                         >
                           Remove
                         </button>
@@ -251,7 +236,7 @@ export default function OrderPreviewPage() {
               <button
                 onClick={handleCheckout}
                 disabled={isLoading || !shippingAddress || !selectedShippingMethod}
-                className="w-full bg-sky-500 text-white py-3 rounded-lg font-semibold hover:bg-sky-600 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+                className="w-full bg-sky-500 text-white py-3 rounded-lg font-semibold hover:bg-sky-600 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer"
               >
                 {isLoading ? 'Processing...' : 'Proceed to Checkout'}
               </button>

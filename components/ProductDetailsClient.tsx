@@ -138,7 +138,7 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
           {needsTruncation && (
             <button
               onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-              className="text-sky-500 hover:text-sky-600 font-medium text-sm mt-2"
+              className="text-sky-500 hover:text-sky-600 font-medium text-sm mt-2 cursor-pointer"
             >
               {isDescriptionExpanded ? 'Read Less' : 'Read More'}
             </button>
@@ -161,7 +161,7 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
             onClick={handleAddToCart}
             className={`w-full py-4 rounded-lg font-semibold text-lg transition-colors ${
               canAddToCart
-                ? 'bg-sky-500 text-white hover:bg-sky-600'
+                ? 'bg-sky-500 text-white hover:bg-sky-600 cursor-pointer'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
             disabled={!canAddToCart}
@@ -174,7 +174,7 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
             onClick={handleBuyNow}
             className={`block w-full py-4 rounded-lg font-semibold text-lg text-center transition-colors ${
               canAddToCart
-                ? 'bg-gray-800 text-white hover:bg-gray-900'
+                ? 'bg-gray-800 text-white hover:bg-gray-900 cursor-pointer'
                 : 'bg-gray-200 text-gray-400 cursor-not-allowed'
             }`}
             disabled={!canAddToCart}

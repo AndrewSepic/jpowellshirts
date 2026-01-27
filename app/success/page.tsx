@@ -1,32 +1,43 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { stripe } from '../../lib/stripe';
+import SuccessPageClient from '@/components/SuccessPageClient';
 
 export default async function SuccessPage({ 
   searchParams 
 }: { 
-  searchParams: Promise<{ session_id?: string }> 
+  searchParams: Promise<{ payment_intent?: string; order_id?: string }> 
 }) {
-  const { session_id } = await searchParams;
+  const { payment_intent, order_id } = await searchParams;
 
-  if (!session_id) {
+  if (!payment_intent) {
     redirect('/');
   }
 
-  // Retrieve the session from Stripe to verify payment
-  const session = await stripe.checkout.sessions.retrieve(session_id, {
-    expand: ['line_items', 'payment_intent']
-  });
+  // Retrieve the payment intent from Stripe to verify payment
+  const paymentIntent = await stripe.paymentIntents.retrieve(payment_intent);
 
-  const { status, customer_details, metadata } = session;
+  const { status, metadata } = paymentIntent;
 
-  // If payment is still pending, redirect to home
-  if (status === 'open') {
-    redirect('/');
+  // If payment is still processing, show pending message
+  if (status === 'processing') {
+    return (
+      <div className="min-h-screen bg-gray-50 py-12">
+        <div className="container mx-auto px-4 max-w-2xl text-center">
+          <h1 className="text-3xl font-bold text-yellow-600 mb-4">Payment Processing</h1>
+          <p className="text-gray-600 mb-6">
+            Your payment is being processed. Please check back later.
+          </p>
+          <Link href="/" className="text-sky-500 hover:underline">
+            Return to Home
+          </Link>
+        </div>
+      </div>
+    );
   }
 
-  // If payment is not complete, show error
-  if (status !== 'complete') {
+  // If payment is not successful, show error
+  if (status !== 'succeeded') {
     return (
       <div className="min-h-screen bg-gray-50 py-12">
         <div className="container mx-auto px-4 max-w-2xl text-center">
@@ -42,84 +53,10 @@ export default async function SuccessPage({
     );
   }
 
-  const customerEmail = customer_details?.email;
-  const orderId = metadata?.orderId;
+  const orderId = metadata?.orderId || order_id;
+  const shippingAddress = metadata?.shippingAddress ? JSON.parse(metadata.shippingAddress) : null;
 
-  return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="container mx-auto px-4 max-w-2xl">
-        <div className="bg-white rounded-lg shadow-md p-8 md:p-12 text-center">
-          {/* Success Icon */}
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <svg
-              className="w-8 h-8 text-green-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-          </div>
-
-          {/* Success Message */}
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            Payment Successful!
-          </h1>
-          <p className="text-lg text-gray-600 mb-2">
-            Thank you for your order. Your payment has been processed successfully.
-          </p>
-          
-          {orderId && (
-            <p className="text-sm text-gray-500 mb-6">
-              Order ID: <span className="font-mono">{orderId}</span>
-            </p>
-          )}
-
-          {customerEmail && (
-            <p className="text-gray-700 mb-6">
-              A confirmation email will be sent to{' '}
-              <span className="font-semibold">{customerEmail}</span>
-            </p>
-          )}
-
-          {/* Order Details */}
-          <div className="bg-gray-50 rounded-lg p-6 mb-8 text-left">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              What happens next?
-            </h2>
-            <ul className="space-y-3 text-gray-700">
-              <li className="flex items-start">
-                <svg className="w-6 h-6 text-green-600 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span>Your order is being processed and sent to production</span>
-              </li>
-            </ul>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/"
-              className="bg-sky-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-sky-600 transition-colors"
-            >
-              Continue Shopping
-            </Link>
-            <Link
-              href="/about"
-              className="bg-gray-200 text-gray-800 px-8 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
-            >
-              Learn More About Us
-            </Link>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  );
+  // We return a client component here on success so that we can 
+  // use Hooks clearCart() and clear sessionStorage
+  return <SuccessPageClient orderId={orderId} shippingAddress={shippingAddress} />;
 }

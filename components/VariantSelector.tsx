@@ -54,7 +54,7 @@ export default function VariantSelector({
                       ? 'ring-2 ring-sky-500 ring-offset-2' 
                       : 'ring-2 ring-gray-300 hover:ring-gray-400'
                     }
-                    ${!isAvailable ? 'opacity-40 cursor-not-allowed' : ''}
+                    ${!isAvailable ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}
                   `}
                   title={color.title}
                   style={{ backgroundColor: hexColor }}
@@ -89,7 +89,7 @@ export default function VariantSelector({
                   onClick={() => onSizeChange(size)}
                   disabled={!isAvailable}
                   className={`
-                    border-2 py-2 rounded-lg font-medium transition-all
+                    border-2 py-2 rounded-lg font-medium transition-all cursor-pointer
                     ${isSelected
                       ? 'border-sky-500 bg-sky-50 text-sky-700'
                       : 'border-gray-300 hover:border-gray-400 text-gray-900'

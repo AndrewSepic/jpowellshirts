@@ -45,7 +45,7 @@ export default function ShippingMethodSelector({
             <button
               key={method}
               onClick={() => onMethodSelect(method, costCents)}
-              className={`w-full p-4 rounded-lg border-2 transition-all text-left ${
+              className={`w-full p-4 rounded-lg border-2 transition-all text-left cursor-pointer ${
                 isSelected
                   ? 'border-sky-500 bg-sky-50'
                   : 'border-gray-200 hover:border-gray-300'
