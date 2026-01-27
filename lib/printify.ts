@@ -2,7 +2,6 @@
 // Docs: https://developers.printify.com/
 
 const PRINTIFY_API_URL = 'https://api.printify.com/v1';
-const USE_MOCK_DATA = !process.env.PRINTIFY_API_TOKEN; // Auto-detect if we should use mocks
 
 export interface PrintifyProduct {
   id: string;
@@ -101,44 +100,10 @@ export interface ShippingResponse {
     economy: number,
 }
 
-// Mock data for testing without API access
-const MOCK_PRODUCTS: PrintifyProduct[] = [
-  {
-    id: 'mock-prod-001',
-    title: 'Classic Powell Portrait',
-    description: 'Iconic Jerome Powell portrait on premium cotton tee',
-    tags: ['powell', 'fed', 'portrait'],
-    variants: [
-      { id: 1, title: 'S', price: 2999, is_enabled: true },
-      { id: 2, title: 'M', price: 2999, is_enabled: true },
-      { id: 3, title: 'L', price: 2999, is_enabled: true },
-      { id: 4, title: 'XL', price: 2999, is_enabled: true },
-      { id: 5, title: '2XL', price: 2999, is_enabled: true },
-    ],
-    images: [
-      { src: '/images/default.png', position: 'front', is_default: true }
-    ],
-    options: [
-      { name: 'Sizes', type: 'size', values: [
-        { id: 1, title: 'S' },
-        { id: 2, title: 'M' },
-        { id: 3, title: 'L' },
-        { id: 4, title: 'XL' },
-        { id: 5, title: '2XL' }
-      ]}
-    ]
-  },
-  // Add more mock products as needed
-];
-
 /**
  * Fetch all products from your Printify shop
  */
 export async function getProducts(): Promise<PrintifyProduct[]> {
-  if (USE_MOCK_DATA) {
-    console.log('🔧 Using mock Printify data (API token not set)');
-    return MOCK_PRODUCTS;
-  }
 
   try {
     const shopId = process.env.PRINTIFY_SHOP_ID;
@@ -168,10 +133,6 @@ export async function getProducts(): Promise<PrintifyProduct[]> {
  * Get a single product by ID
  */
 export async function getProduct(productId: string): Promise<PrintifyProduct | null> {
-  if (USE_MOCK_DATA) {
-    return MOCK_PRODUCTS.find(p => p.id === productId) || null;
-  }
-
   try {
     const shopId = process.env.PRINTIFY_SHOP_ID;
     const response = await fetch(
@@ -202,9 +163,6 @@ export function getEnabledVariants(product: PrintifyProduct): PrintifyVariant[] 
   return product.variants.filter(v => v.is_enabled);
 }
 
-/**
- * Utility: Get minimum price from enabled variants (in dollars)
- */
 export function getMinPrice(product: PrintifyProduct): number {
   const enabledVariants = getEnabledVariants(product);
   if (enabledVariants.length === 0) return 0;
@@ -317,15 +275,6 @@ export async function calculateShipping(
   lineItems: PrintifyShippingLineItem[],
   address: PrintifyShippingAddress
 ): Promise<PrintifyShippingCosts> {
-  if (USE_MOCK_DATA) {
-    console.log('🔧 Using mock shipping costs');
-    return {
-      standard: 500,
-      economy: 399,
-      express: 1200,
-    };
-  }
-
   try {
     const shopId = process.env.PRINTIFY_SHOP_ID;
     const url = `${PRINTIFY_API_URL}/shops/${shopId}/orders/shipping.json`;
@@ -373,19 +322,6 @@ export async function createOrder(
   items: PrintifyOrderItem[],
   shippingAddress: PrintifyShippingAddress
 ) {
-  if (USE_MOCK_DATA) {
-    console.log('🔧 Mock Printify order created:', {
-      orderId,
-      items,
-      shippingAddress
-    });
-    return {
-      id: `printify-mock-${Date.now()}`,
-      status: 'pending',
-      external_id: orderId,
-    };
-  }
-
   try {
     const shopId = process.env.PRINTIFY_SHOP_ID;
     
@@ -432,11 +368,6 @@ export async function createOrder(
  * Submit an order for production (moves from draft to production queue)
  */
 export async function submitOrderForProduction(printifyOrderId: string) {
-  if (USE_MOCK_DATA) {
-    console.log('🔧 Mock Printify order submitted for production:', printifyOrderId);
-    return { success: true };
-  }
-
   try {
     const shopId = process.env.PRINTIFY_SHOP_ID;
     

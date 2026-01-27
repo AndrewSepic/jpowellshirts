@@ -79,7 +79,6 @@ export const PRINTIFY_COLOR_MAP: Record<string, string> = {
   'Sunset': '',
   'Dusty Blue': '',
   'Mauve': '',
-  'Ice Blue': '',
   'Heather Raspberry': '#d56280',
   'Soft Pink': '',
   'Heather Aqua': '',

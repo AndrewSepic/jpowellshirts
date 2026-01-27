@@ -9,13 +9,15 @@ import ShippingAddressForm from '@/components/ShippingAddressForm'
 import ShippingMethodSelector from '@/components/ShippingMethodSelector'
 import CheckoutForm from '@/components/CheckoutForm'
 
+// Prevent static generation of this page (requires client-side APIs)
+export const dynamic = 'force-dynamic'
+
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
 
 export interface ShippingAddress {
   first_name: string
   last_name: string
   email: string
-  phone: string
   country: string
   region: string
   address1: string
@@ -56,10 +58,10 @@ export default function CheckoutPage() {
     }
   }, [items, router])
 
-  const handleAddressComplete = async (address: ShippingAddress) => {
-    // Add email to address
-    const addressWithEmail = { ...address, email, phone: address.phone || '' }
-    setShippingAddress(addressWithEmail)
+  const handleAddressComplete = async (address: Omit<ShippingAddress, 'email'>) => {
+    // Add email from contact form
+    const fullAddress: ShippingAddress = { ...address, email }
+    setShippingAddress(fullAddress)
     setIsCalculatingShipping(true)
 
     try {
@@ -72,7 +74,7 @@ export default function CheckoutPage() {
       const response = await fetch('/api/calculate-shipping', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ lineItems, address: addressWithEmail }),
+        body: JSON.stringify({ lineItems, address: fullAddress }),
       })
 
       if (!response.ok) throw new Error('Failed to calculate shipping')

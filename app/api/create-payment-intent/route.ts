@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { stripe } from '../../../lib/stripe'
 import { generateOrderId } from '../../../lib/utils'
-import type { ShippingAddress } from '@/app/cart/page'
+import type { ShippingAddress } from '@/app/checkout/page'
 
 interface CartItem {
   productId: string;

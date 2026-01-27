@@ -1,9 +1,10 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useCart } from '@/providers/CartContext';
 
-export default function CartPage() {
+function CartContent() {
   const searchParams = useSearchParams();
   const canceled = searchParams.get('canceled');
   const router = useRouter();
@@ -114,5 +115,17 @@ export default function CartPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CartPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 py-12 flex items-center justify-center">
+        <div className="text-gray-600">Loading cart...</div>
+      </div>
+    }>
+      <CartContent />
+    </Suspense>
   );
 }
