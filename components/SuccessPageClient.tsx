@@ -10,13 +10,13 @@ interface SuccessPageClientProps {
 }
 
 export default function SuccessPageClient({ orderId, shippingAddress }: SuccessPageClientProps) {
-  const { clearCart } = useCart()
+  const { clearCart } = useCart();
 
   useEffect(() => {
     // Clear cart on successful payment
     clearCart()
     // Also clear session storage
-    sessionStorage.removeItem('checkoutData')
+    localStorage.removeItem('cart')
   }, []) 
 
   return (
