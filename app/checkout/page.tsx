@@ -5,12 +5,20 @@ import { useRouter } from 'next/navigation'
 import { Elements } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 import { useCart } from '@/providers/CartContext'
-import ShippingAddressForm from '@/components/ShippingAddressForm'
+import dynamic from 'next/dynamic'
 import ShippingMethodSelector from '@/components/ShippingMethodSelector'
 import CheckoutForm from '@/components/CheckoutForm'
 
-// Prevent static generation of this page (requires client-side APIs)
-export const dynamic = 'force-dynamic'
+// Dynamically import ShippingAddressForm (Mapbox requires browser APIs)
+const ShippingAddressForm = dynamic(() => import('@/components/ShippingAddressForm'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center py-8">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-sky-600"></div>
+      <span className="ml-3 text-gray-600">Loading address form...</span>
+    </div>
+  )
+})
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
 
