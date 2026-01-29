@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'images-api.printify.com',
+		pathname: '/**', // Allow all paths
       },
     ],
   },

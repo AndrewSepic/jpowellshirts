@@ -112,7 +112,7 @@ function CartContent() {
                 onClick={() => router.push('/')}
                 className="w-full bg-white border border-sky-500 text-sky-600 py-3 rounded-lg font-semibold hover:bg-sky-50 transition-colors mt-2 cursor-pointer"
               >
-                {'Back to Shopping'}
+                Back to Shopping
               </button>
 
               <p className="text-xs text-gray-500 text-center mt-4">
