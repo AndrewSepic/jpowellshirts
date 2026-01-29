@@ -25,7 +25,6 @@ export async function POST(request: NextRequest) {
 
     const shippingCosts = await calculateShipping(lineItems, {
       ...address,
-      country: address.country.toUpperCase(), // Ensure country code is uppercase
       email: 'customer@example.com', // Placeholder - not used for shipping calculation
       phone: '555-0000', // Placeholder - not used for shipping calculation
     });

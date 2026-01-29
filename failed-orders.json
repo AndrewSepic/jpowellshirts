@@ -1,0 +1,59 @@
+[
+  {
+    "orderId": "PW-1769651645107-4841",
+    "sessionId": "pi_3SukQr2MrGhsWeOd1iy3WaZg",
+    "timestamp": "2026-01-29T02:01:40.946Z",
+    "error": "Printify order creation failed: {\"status\":\"error\",\"code\":0,\"message\":\"Operation failed.\",\"errors\":{\"reason\":\"code: us\",\"code\":0}}",
+    "orderData": {
+      "items": [
+        {
+          "product_id": "6975205ce7e928c6c604a833",
+          "variant_id": 79073,
+          "quantity": 1
+        },
+        {
+          "product_id": "6975205ce7e928c6c604a833",
+          "variant_id": 78878,
+          "quantity": 1
+        }
+      ],
+      "shippingAddress": {
+        "first_name": "Andrew",
+        "last_name": "Sepic",
+        "email": "andrewsepic@gmail.com",
+        "country": "us",
+        "region": "VT",
+        "address1": "3840 Stage Road",
+        "address2": "",
+        "city": "Jericho",
+        "zip": "05465"
+      }
+    }
+  },
+  {
+    "orderId": "PW-1769652659671-4616",
+    "sessionId": "pi_3SukhD2MrGhsWeOd1mPQXnw3",
+    "timestamp": "2026-01-29T02:11:31.737Z",
+    "error": "Failed to submit order for production: 400",
+    "orderData": {
+      "items": [
+        {
+          "product_id": "6975205ce7e928c6c604a833",
+          "variant_id": 78938,
+          "quantity": 1
+        }
+      ],
+      "shippingAddress": {
+        "first_name": "Andrew",
+        "last_name": "Sepic",
+        "email": "andrewsepic@gmail.com",
+        "country": "US",
+        "region": "VT",
+        "address1": "3840 Stage Road",
+        "address2": "",
+        "city": "Jericho",
+        "zip": "05465"
+      }
+    }
+  }
+]

@@ -363,33 +363,3 @@ export async function createOrder(
     throw error;
   }
 }
-
-/**
- * Submit an order for production (moves from draft to production queue)
- */
-export async function submitOrderForProduction(printifyOrderId: string) {
-  try {
-    const shopId = process.env.PRINTIFY_SHOP_ID;
-    
-    const response = await fetch(
-      `${PRINTIFY_API_URL}/shops/${shopId}/orders/${printifyOrderId}/send_to_production.json`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${process.env.PRINTIFY_API_TOKEN}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`Failed to submit order for production: ${response.status}`);
-    }
-
-    console.log('✅ Printify order submitted for production:', printifyOrderId);
-    return await response.json();
-  } catch (error) {
-    console.error('Failed to submit order for production:', error);
-    throw error;
-  }
-}

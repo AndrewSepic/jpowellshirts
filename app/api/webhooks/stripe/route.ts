@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import Stripe from 'stripe';
 import { stripe } from '@/lib/stripe';
-import { createOrder, submitOrderForProduction } from '@/lib/printify';
+import { createOrder } from '@/lib/printify';
 import { writeFileSync, readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 
@@ -99,12 +99,8 @@ export async function POST(request: Request) {
     try {
       // Create order in Printify
       console.log('📦 Creating Printify order for:', orderId);
-      const printifyOrder = await createOrder(orderId, printifyItems, printifyAddress);
-      
-      // Submit to production
-      console.log('🏭 Submitting to production:', printifyOrder.id);
-      await submitOrderForProduction(printifyOrder.id);
-      
+      await createOrder(orderId, printifyItems, printifyAddress);
+    
       console.log('✅ Order successfully sent to Printify:', orderId);
     } catch (error: any) {
       console.error('Failed to process Printify order:', error);

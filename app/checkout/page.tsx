@@ -67,8 +67,8 @@ export default function CheckoutPage() {
   }, [items, router])
 
   const handleAddressComplete = async (address: Omit<ShippingAddress, 'email'>) => {
-    // Add email from contact form
-    const fullAddress: ShippingAddress = { ...address, email }
+    // Add email from contact form and ensure country is uppercase
+    const fullAddress: ShippingAddress = { ...address, email, country: address.country.toUpperCase() }
     setShippingAddress(fullAddress)
     setIsCalculatingShipping(true)
 

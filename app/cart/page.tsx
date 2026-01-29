@@ -102,10 +102,17 @@ function CartContent() {
               {/* Checkout Button */}
               <button
                 onClick={handleCheckout}
-        
-                className="w-full bg-sky-500 text-white py-3 rounded-lg font-semibold hover:bg-sky-600 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer"
+                className="w-full bg-sky-500 text-white py-3 rounded-lg font-semibold hover:bg-sky-600 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer mt-4"
               >
                 {'Proceed to Checkout'}
+              </button>
+
+              {/* Back to Shopping Button */}
+              <button
+                onClick={() => router.push('/')}
+                className="w-full bg-white border border-sky-500 text-sky-600 py-3 rounded-lg font-semibold hover:bg-sky-50 transition-colors mt-2 cursor-pointer"
+              >
+                {'Back to Shopping'}
               </button>
 
               <p className="text-xs text-gray-500 text-center mt-4">

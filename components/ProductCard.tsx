@@ -30,17 +30,15 @@ export default function ProductCard({ id, title, price, imageUrl, description }:
             {title}
           </h3>
           {description && (
-            <p className="text-sm text-gray-600 mb-2 line-clamp-2">
-              {description}
+            <p 
+				className="text-sm text-gray-600 mb-2 line-clamp-2"
+			 	dangerouslySetInnerHTML={{ __html: description }}>
             </p>
           )}
           <div className="flex items-center justify-between">
             <span className="text-xl font-bold text-gray-900">
               ${price.toFixed(2)}
             </span>
-            <button className="bg-sky-500 text-white px-4 py-2 rounded-lg hover:bg-sky-600 hover:cursor-pointer transition-colors text-sm font-medium">
-              View Details
-            </button>
           </div>
         </div>
       </div>
