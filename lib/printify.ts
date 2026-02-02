@@ -16,6 +16,7 @@ export interface PrintifyProduct {
     id: string;
     handle: string;
   };
+  updated_at?: string;
 }
 
 export interface PrintifyOption {

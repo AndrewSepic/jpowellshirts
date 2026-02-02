@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { PrintifyProduct, getDefaultImage } from '@/lib/printify';
+
 
 interface AdminProductManagerProps {
   products: PrintifyProduct[];
@@ -11,15 +12,36 @@ interface AdminProductManagerProps {
 export default function AdminProductManager({ products }: AdminProductManagerProps) {
   const [publishingStates, setPublishingStates] = useState<Record<string, 'idle' | 'loading' | 'success' | 'error'>>({});
   const [errorMessages, setErrorMessages] = useState<Record<string, string>>({});
+  const [publishedTimestamps, setPublishedTimestamps] = useState<Record<string, string>>({});
+
+  console.log(products)
+  useEffect(() => {
+    // Fetch published timestamps from API
+    fetch('/api/admin/published-products')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.publishedProducts) {
+          setPublishedTimestamps(data.publishedProducts);
+        }
+      });
+  }, []);
 
   const getProductStatus = (product: PrintifyProduct) => {
     const localState = publishingStates[product.id];
     if (localState === 'loading') return 'loading';
     if (localState === 'success') return 'success';
     if (localState === 'error') return 'error';
-    
+
     // Check actual Printify status
     if (product.external?.id || product.external?.handle) {
+      // Compare timestamps for update needed
+      const published_at = publishedTimestamps[product.id];
+      // If product.updatedAt exists and doesn't match publishedAt, needs update
+      if (product.updated_at && published_at && product.updated_at !== published_at) {
+		console.log("product updated at", product.updated_at)
+		console.log("published at", published_at)
+        return 'update-needed';
+      }
       return 'published';
     }
     return 'ready';
@@ -32,13 +54,16 @@ export default function AdminProductManager({ products }: AdminProductManagerPro
     try {
       // Generate a handle from product title (lowercase, replace spaces with hyphens)
       const handle = productTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      // Find the product's updatedAt
+      const product = products.find(p => p.id === productId);
+      const updatedAt = product?.updated_at;
 
       const response = await fetch('/api/admin/publish-product', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ productId, handle }),
+        body: JSON.stringify({ productId, handle, updatedAt }),
       });
 
       if (!response.ok) {
@@ -47,7 +72,14 @@ export default function AdminProductManager({ products }: AdminProductManagerPro
       }
 
       setPublishingStates(prev => ({ ...prev, [productId]: 'success' }));
-      
+      // Refresh published timestamps after publish
+      fetch('/api/admin/published-products')
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.publishedProducts) {
+            setPublishedTimestamps(data.publishedProducts);
+          }
+        });
       // Reset success state after 3 seconds
       setTimeout(() => {
         setPublishingStates(prev => ({ ...prev, [productId]: 'idle' }));
@@ -116,6 +148,8 @@ export default function AdminProductManager({ products }: AdminProductManagerPro
                     <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
                       status === 'success' || status === 'published'
                         ? 'bg-green-100 text-green-800'
+                        : status === 'update-needed'
+                        ? 'bg-yellow-100 text-yellow-800'
                         : status === 'error'
                         ? 'bg-red-100 text-red-800'
                         : status === 'loading'
@@ -124,6 +158,7 @@ export default function AdminProductManager({ products }: AdminProductManagerPro
                     }`}>
                       {status === 'success' && '✓ Just Published'}
                       {status === 'published' && '✓ Published'}
+                      {status === 'update-needed' && '⚠️ Update Needed'}
                       {status === 'error' && '✗ Error'}
                       {status === 'loading' && 'Publishing...'}
                       {status === 'ready' && 'Not Published'}
@@ -139,7 +174,7 @@ export default function AdminProductManager({ products }: AdminProductManagerPro
                           : 'bg-sky-500 text-white hover:bg-sky-600 cursor-pointer'
                       }`}
                     >
-                      {status === 'loading' ? 'Publishing...' : 'Set Published'}
+                      {status === 'loading' ? 'Publishing...' : (status === 'update-needed' ? 'Update Published' : 'Set Published')}
                     </button>
                     {errorMessages[product.id] && (
                       <p className="text-red-600 text-xs mt-1">

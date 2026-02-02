@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Your Order Confirmation</title>
+    <style>
+      body { font-family: Arial, sans-serif; color: #222; }
+      .container { max-width: 600px; margin: 0 auto; padding: 24px; background: #fff; border-radius: 8px; }
+      .header { font-size: 1.5em; margin-bottom: 16px; }
+      .footer { margin-top: 32px; font-size: 0.9em; color: #888; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">Thank you for your order, {{customerName}}!</div>
+      <p>Your order <strong>#{{orderId}}</strong> has been placed successfully.</p>
+      <p>We'll notify you when your order ships.</p>
+      <div class="footer">
+        &copy; Powell Shirts
+      </div>
+    </div>
+  </body>
+</html>

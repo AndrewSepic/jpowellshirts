@@ -1,8 +1,13 @@
+
 import { NextRequest, NextResponse } from 'next/server';
+import fs from 'fs/promises';
+import path from 'path';
+
+const PUBLISHED_PRODUCTS_PATH = path.join(process.cwd(), 'published-products.json');
 
 export async function POST(request: NextRequest) {
   try {
-    const { productId, handle } = await request.json();
+    const { productId, handle, updatedAt } = await request.json();
 
     if (!productId || !handle) {
       return NextResponse.json(
@@ -41,6 +46,19 @@ export async function POST(request: NextRequest) {
         { error: 'Failed to update publishing status', details: error },
         { status: response.status }
       );
+    }
+
+    // Update published-products.json
+    let publishedProducts: Record<string, string> = {};
+    try {
+      const file = await fs.readFile(PUBLISHED_PRODUCTS_PATH, 'utf-8');
+      publishedProducts = JSON.parse(file);
+    } catch (e) {
+      // File may not exist yet
+    }
+    if (updatedAt) {
+      publishedProducts[productId] = updatedAt;
+      await fs.writeFile(PUBLISHED_PRODUCTS_PATH, JSON.stringify(publishedProducts, null, 2));
     }
 
     const data = await response.json();
