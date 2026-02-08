@@ -5,6 +5,7 @@ import { stripe } from '@/lib/stripe';
 import { createOrder } from '@/lib/printify';
 import { writeFileSync, readFileSync, existsSync } from 'fs';
 import { join } from 'path';
+import { sendOrderPlacedEmail } from '@/lib/email';
 
 const FAILED_ORDERS_FILE = join(process.cwd(), 'failed-orders.json');
 
@@ -100,7 +101,18 @@ export async function POST(request: Request) {
       // Create order in Printify
       console.log('📦 Creating Printify order for:', orderId);
       await createOrder(orderId, printifyItems, printifyAddress);
-    
+
+	  try {
+		await sendOrderPlacedEmail({
+			to:shippingAddress.email, 
+			orderId: orderId, 
+			customerName: shippingAddress.first_name,
+			items: items
+			});
+	  } catch(err) {
+		console.error("Problem sending customer order confirmation email: ", err)
+	  }
+
       console.log('✅ Order successfully sent to Printify:', orderId);
     } catch (error: any) {
       console.error('Failed to process Printify order:', error);

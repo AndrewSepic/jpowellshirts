@@ -6,13 +6,14 @@ export interface SendOrderEmailParams {
   to: string;
   orderId: string;
   customerName: string;
+  items: [];
 }
 
-export async function sendOrderPlacedEmail({ to, orderId, customerName }: SendOrderEmailParams) {
-  const html = await renderOrderPlacedTemplate({ customerName, orderId });
+export async function sendOrderPlacedEmail({ to, orderId, customerName, items }: SendOrderEmailParams) {
+  const html = await renderOrderPlacedTemplate({ customerName, orderId, items });
   const mailgun = new Mailgun(FormData);
   const mg = mailgun.client({
-	username: '',
+	username: 'api',
 	key: process.env.MAILGUN_API_KEY || "API_KEY"
   })
 
@@ -29,6 +30,4 @@ export async function sendOrderPlacedEmail({ to, orderId, customerName }: SendOr
   } catch (error) {
     console.log(error); //logs any error
   }
-
-  const msg = 
 }

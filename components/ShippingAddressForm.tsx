@@ -2,6 +2,7 @@
 
 import { useCallback } from 'react';
 import { AddressAutofill, useConfirmAddress } from '@mapbox/search-js-react';
+import { useCart } from '@/providers/CartContext';
 
 if (!process.env.NEXT_PUBLIC_MAPBOX_TOKEN) {
   throw new Error('NEXT_PUBLIC_MAPBOX_TOKEN environment variable is required');
@@ -29,6 +30,7 @@ export default function ShippingAddressForm({ onAddressConfirmed, isCalculating 
   const { formRef, showConfirm } = useConfirmAddress({
     accessToken: MAPBOX_ACCESS_TOKEN
   });
+  const { setAddressFeature } = useCart();
 
 
   const handleFormSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
@@ -53,6 +55,10 @@ export default function ShippingAddressForm({ onAddressConfirmed, isCalculating 
       onAddressConfirmed(address);
     }
   }, [showConfirm, onAddressConfirmed]);
+
+  const handleSuggestionClick = (features: any[]) => {
+	 setAddressFeature(features[0]);
+  }
 
   return (
     <form ref={formRef} onSubmit={handleFormSubmit} className="space-y-4">
@@ -85,7 +91,9 @@ export default function ShippingAddressForm({ onAddressConfirmed, isCalculating 
         </div>
       </div>
 
-      <AddressAutofill accessToken={MAPBOX_ACCESS_TOKEN} >
+      <AddressAutofill 
+	  	onRetrieve={handleSuggestionClick}
+	  	accessToken={MAPBOX_ACCESS_TOKEN} >
         <div>
           <label htmlFor="address-line1" className="block text-sm font-medium text-gray-700 mb-1">
             Address *

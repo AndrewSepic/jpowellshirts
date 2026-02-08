@@ -19,6 +19,7 @@ interface PaymentIntentRequest {
   items: CartItem[];
   shippingCost: number;
   shippingAddress: ShippingAddress;
+  addressFeature: {} | null;
   shippingMethod: string;
   taxAmount: number;
   taxCalculationId: string;
@@ -29,7 +30,8 @@ export async function POST(request: Request) {
     const { 
       items, 
       shippingCost, 
-      shippingAddress, 
+      shippingAddress,
+	  addressFeature,
       shippingMethod,
       taxAmount,
       taxCalculationId 
@@ -61,6 +63,7 @@ export async function POST(request: Request) {
         taxCalculationId,
         shippingMethod,
         shippingAddress: JSON.stringify(shippingAddress),
+		addressFeature: addressFeature,
         items: JSON.stringify(items.map(item => ({
           printifyProductId: item.productId,
           printifyVariantId: item.variantId,
