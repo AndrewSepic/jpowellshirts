@@ -30,8 +30,6 @@ export default function ShippingAddressForm({ onAddressConfirmed, isCalculating 
   const { formRef, showConfirm } = useConfirmAddress({
     accessToken: MAPBOX_ACCESS_TOKEN
   });
-  const { setAddressFeature } = useCart();
-
 
   const handleFormSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -55,10 +53,6 @@ export default function ShippingAddressForm({ onAddressConfirmed, isCalculating 
       onAddressConfirmed(address);
     }
   }, [showConfirm, onAddressConfirmed]);
-
-  const handleSuggestionClick = (features: any[]) => {
-	 setAddressFeature(features[0]);
-  }
 
   return (
     <form ref={formRef} onSubmit={handleFormSubmit} className="space-y-4">
@@ -91,8 +85,7 @@ export default function ShippingAddressForm({ onAddressConfirmed, isCalculating 
         </div>
       </div>
 
-      <AddressAutofill 
-	  	onRetrieve={handleSuggestionClick}
+      <AddressAutofill
 	  	accessToken={MAPBOX_ACCESS_TOKEN} >
         <div>
           <label htmlFor="address-line1" className="block text-sm font-medium text-gray-700 mb-1">

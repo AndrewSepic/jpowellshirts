@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import ProductImageCarousel from '@/components/ProductImageCarousel';
-import VariantSelector from '@/components/VariantSelector';
+import ProductImageCarousel from '@/components/product/ProductImageCarousel';
+import VariantSelector from '@/components/product/VariantSelector';
 import { useCart } from '@/providers/CartContext';
 import { 
   PrintifyProduct, 

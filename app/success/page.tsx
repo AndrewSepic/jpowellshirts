@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { stripe } from '../../lib/stripe';
-import SuccessPageClient from '@/components/SuccessPageClient';
+import SuccessPageClient from '@/components/success/SuccessPageClient';
 
 export default async function SuccessPage({ 
   searchParams 
@@ -58,5 +58,5 @@ export default async function SuccessPage({
 
   // We return a client component here on success so that we can 
   // use Hooks clearCart() and clear sessionStorage
-  return <SuccessPageClient orderId={orderId} shippingAddress={shippingAddress} />;
+  return <SuccessPageClient orderId={orderId} shippingAddress={shippingAddress}/>;
 }

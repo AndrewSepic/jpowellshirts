@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useCart } from '@/providers/CartContext'
+import { geocodeAddress } from '@/lib/utils'
 
 interface SuccessPageClientProps {
   orderId: string | undefined
@@ -10,13 +11,23 @@ interface SuccessPageClientProps {
 }
 
 export default function SuccessPageClient({ orderId, shippingAddress }: SuccessPageClientProps) {
-  const { clearCart, addressFeature } = useCart();
+  const { clearCart } = useCart();
+  const [ geocodedAddress, setGeocodedAddress ] = useState(null)
 
   useEffect(() => {
     // Clear cart on successful payment
     clearCart()
     // Also clear session storage
     localStorage.removeItem('cart')
+	
+	const getGeoCode = async () => {
+		const geo = await geocodeAddress(shippingAddress)
+		console.log("geo", geo)
+		setGeocodedAddress(geo)
+	}
+
+	getGeoCode()
+
   }, []) 
 
   return (
@@ -60,6 +71,10 @@ export default function SuccessPageClient({ orderId, shippingAddress }: SuccessP
               <span className="font-semibold">{shippingAddress.city}, {shippingAddress.region}</span>
             </p>
           )}
+
+		  {geocodedAddress && (
+			'We got a geocode!'
+		  )}
 
           {/* Order Details */}
           <div className="bg-gray-50 rounded-lg p-6 mb-8 text-left">

@@ -63,7 +63,7 @@ export async function POST(request: Request) {
         taxCalculationId,
         shippingMethod,
         shippingAddress: JSON.stringify(shippingAddress),
-		addressFeature: addressFeature,
+		addressFeature: addressFeature ? JSON.stringify(addressFeature) : null,
         items: JSON.stringify(items.map(item => ({
           printifyProductId: item.productId,
           printifyVariantId: item.variantId,

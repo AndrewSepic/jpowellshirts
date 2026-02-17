@@ -23,8 +23,6 @@ interface CartContextType {
   clearCart: () => void;
   getItemCount: () => number;
   getTotal: () => number;
-  addressFeature: any | null;
-  setAddressFeature: (feature: any) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -32,7 +30,6 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [ addressFeature, setAddressFeature] = useState<any | null>(null);
 
   // Load cart from localStorage on mount
   useEffect(() => {
@@ -117,9 +114,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         updateQuantity,
         clearCart,
         getItemCount,
-        getTotal,
-		addressFeature,
-		setAddressFeature
+        getTotal
       }}
     >
       {children}
