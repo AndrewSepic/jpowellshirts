@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useCart } from '@/providers/CartContext'
 import { geocodeAddress } from '@/lib/utils'
+import StaticImage from './StaticImage'
 
 interface SuccessPageClientProps {
   orderId: string | undefined
@@ -73,7 +74,7 @@ export default function SuccessPageClient({ orderId, shippingAddress }: SuccessP
           )}
 
 		  {geocodedAddress && (
-			'We got a geocode!'
+			<StaticImage coordinates={geocodedAddress}/>
 		  )}
 
           {/* Order Details */}

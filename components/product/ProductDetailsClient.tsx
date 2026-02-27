@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import ProductImageCarousel from '@/components/product/ProductImageCarousel';
 import VariantSelector from '@/components/product/VariantSelector';
@@ -46,10 +45,8 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
   
   // Truncate description to 100 words
   const truncateDescription = (html: string, wordLimit: number) => {
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = html;
-    const text = tempDiv.textContent || tempDiv.innerText || '';
-    const words = text.trim().split(/\s+/);
+    const text = html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+    const words = text.split(/\s+/);
     
     if (words.length <= wordLimit) {
       return { truncated: html, needsTruncation: false };
@@ -61,9 +58,10 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
       needsTruncation: true 
     };
   };
+
+  	const { truncated, needsTruncation } = truncateDescription(product.description, 100);
+	const displayDescription = isDescriptionExpanded ? product.description : truncated;
   
-  const { truncated, needsTruncation } = truncateDescription(product.description, 100);
-  const displayDescription = isDescriptionExpanded ? product.description : truncated;
   
   // Get images for the current variant (filtered by color if selected)
   const displayImages = currentVariant 
@@ -107,6 +105,11 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
     handleAddToCart();
     // Will redirect to cart, which can then go to checkout
   };
+
+  useEffect(() => {
+	
+
+  }, [selectedColorId])
 
   const canAddToCart = selectedColorId !== null && selectedSize !== null && currentVariant !== null;
 
@@ -153,6 +156,8 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
           selectedSize={selectedSize}
           onColorChange={setSelectedColorId}
           onSizeChange={setSelectedSize}
+		  availableColorIds={availableColorIds}
+		  availableSizes={availableSizes}
         />
 
         {/* Add to Cart Button */}
