@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     const { 
       items, 
       shippingCost, 
-      shippingAddress, 
+      shippingAddress,
       shippingMethod,
       taxAmount,
       taxCalculationId 
@@ -66,6 +66,9 @@ export async function POST(request: Request) {
           printifyVariantId: item.variantId,
           quantity: item.quantity,
           price: item.price,
+		  productTitle: item.productTitle,
+		  color: item.colorName,
+		  size: item.sizeName,
         }))),
         subtotal: subtotal.toFixed(2),
         shippingCost: shippingCost.toFixed(2),

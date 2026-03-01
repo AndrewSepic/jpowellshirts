@@ -1,8 +1,10 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useCart } from '@/providers/CartContext'
+import { geocodeAddress } from '@/lib/utils'
+import StaticImage from './StaticImage'
 
 interface SuccessPageClientProps {
   orderId: string | undefined
@@ -11,12 +13,21 @@ interface SuccessPageClientProps {
 
 export default function SuccessPageClient({ orderId, shippingAddress }: SuccessPageClientProps) {
   const { clearCart } = useCart();
+  const [ geocodedAddress, setGeocodedAddress ] = useState<[]>([])
 
   useEffect(() => {
     // Clear cart on successful payment
     clearCart()
     // Also clear session storage
     localStorage.removeItem('cart')
+	
+	const getGeoCode = async () => {
+		const geo = await geocodeAddress(shippingAddress)
+		setGeocodedAddress(geo.geometry.coordinates)
+	}
+
+	getGeoCode()
+
   }, []) 
 
   return (
@@ -60,6 +71,10 @@ export default function SuccessPageClient({ orderId, shippingAddress }: SuccessP
               <span className="font-semibold">{shippingAddress.city}, {shippingAddress.region}</span>
             </p>
           )}
+
+		  {geocodedAddress && (
+			<StaticImage coordinates={geocodedAddress}/>
+		  )}
 
           {/* Order Details */}
           <div className="bg-gray-50 rounded-lg p-6 mb-8 text-left">

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getProduct } from '@/lib/printify';
-import ProductDetailsClient from '@/components/ProductDetailsClient';
+import ProductDetailsClient from '@/components/product/ProductDetailsClient';
 
 export default async function ProductPage({
   params

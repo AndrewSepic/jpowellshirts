@@ -1,4 +1,4 @@
-import ProductCard from './ProductCard';
+import ProductCard from '../product/ProductCard';
 import { DisplayProduct } from '@/lib/printify';
 
 export default function ProductGallery({ products } :{products: DisplayProduct[]}) {

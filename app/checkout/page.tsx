@@ -6,11 +6,11 @@ import { Elements } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 import { useCart } from '@/providers/CartContext'
 import dynamic from 'next/dynamic'
-import ShippingMethodSelector from '@/components/ShippingMethodSelector'
-import CheckoutForm from '@/components/CheckoutForm'
+import ShippingMethodSelector from '@/components/checkout/ShippingMethodSelector'
+import CheckoutForm from '@/components/checkout/CheckoutForm'
 
 // Dynamically import ShippingAddressForm (Mapbox requires browser APIs)
-const ShippingAddressForm = dynamic(() => import('@/components/ShippingAddressForm'), {
+const ShippingAddressForm = dynamic(() => import('@/components/checkout/ShippingAddressForm'), {
   ssr: false,
   loading: () => (
     <div className="flex items-center justify-center py-8">

@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
         hostname: 'images-api.printify.com',
 		pathname: '/**', // Allow all paths
       },
+	  {
+		protocol: 'https',
+		hostname: 'api.mapbox.com',
+		pathname: '/**'
+	  }
     ],
   },
 };

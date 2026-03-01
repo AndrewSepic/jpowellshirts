@@ -114,7 +114,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         updateQuantity,
         clearCart,
         getItemCount,
-        getTotal,
+        getTotal
       }}
     >
       {children}

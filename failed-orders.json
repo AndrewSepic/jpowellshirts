@@ -55,5 +55,31 @@
         "zip": "05465"
       }
     }
+  },
+  {
+    "orderId": "PW-1770516946009-9310",
+    "sessionId": "pi_3SyNXK2MrGhsWeOd0Pvou3d1",
+    "timestamp": "2026-02-08T02:24:07.432Z",
+    "error": "Printify order creation failed: {\"status\":\"error\",\"code\":8100,\"message\":\"Validation failed.\",\"errors\":{\"reason\":\"Order with unique_id 26060376-PW-1770516946009-9310 already exists\",\"code\":8100}}",
+    "orderData": {
+      "items": [
+        {
+          "product_id": "69719d882987e83a930498e2",
+          "variant_id": 18228,
+          "quantity": 1
+        }
+      ],
+      "shippingAddress": {
+        "first_name": "Andrew",
+        "last_name": "Sepic",
+        "email": "andrewsepic@gmail.com",
+        "country": "US",
+        "region": "VT",
+        "address1": "3840 Stage Road",
+        "address2": "",
+        "city": "Jericho",
+        "zip": "05465"
+      }
+    }
   }
 ]

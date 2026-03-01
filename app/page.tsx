@@ -1,4 +1,4 @@
-import ProductGallery from '@/components/ProductGallery';
+import ProductGallery from '@/components/layout/ProductGallery';
 import { getProducts, transformProductForDisplay } from '@/lib/printify';
 
 export default async function Home() {

@@ -2,9 +2,10 @@ import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import Stripe from 'stripe';
 import { stripe } from '@/lib/stripe';
-import { createOrder } from '@/lib/printify';
+import { createOrder, getProduct, getImagesForVariant } from '@/lib/printify';
 import { writeFileSync, readFileSync, existsSync } from 'fs';
 import { join } from 'path';
+import { sendOrderPlacedEmail } from '@/lib/email';
 
 const FAILED_ORDERS_FILE = join(process.cwd(), 'failed-orders.json');
 
@@ -100,7 +101,27 @@ export async function POST(request: Request) {
       // Create order in Printify
       console.log('📦 Creating Printify order for:', orderId);
       await createOrder(orderId, printifyItems, printifyAddress);
-    
+
+	  try {
+		// Enrich items with image URLs from Printify (kept out of Stripe metadata to avoid 500 char limit)
+		const enrichedItems = await Promise.all(items.map(async (item: any) => {
+			const product = await getProduct(item.printifyProductId);
+			const imageUrl = product
+				? (getImagesForVariant(product, item.printifyVariantId)[0]?.src ?? product.images[0]?.src ?? '')
+				: '';
+			return { ...item, imageUrl };
+		}));
+
+		await sendOrderPlacedEmail({
+			to: shippingAddress.email,
+			orderId: orderId,
+			customerName: shippingAddress.first_name,
+			items: enrichedItems
+		});
+	  } catch(err) {
+		console.error("Problem sending customer order confirmation email: ", err)
+	  }
+
       console.log('✅ Order successfully sent to Printify:', orderId);
     } catch (error: any) {
       console.error('Failed to process Printify order:', error);

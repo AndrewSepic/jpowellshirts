@@ -1,10 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import ProductImageCarousel from '@/components/ProductImageCarousel';
-import VariantSelector from '@/components/VariantSelector';
+import ProductImageCarousel from '@/components/product/ProductImageCarousel';
+import VariantSelector from '@/components/product/VariantSelector';
 import { useCart } from '@/providers/CartContext';
 import { 
   PrintifyProduct, 
@@ -33,9 +32,8 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
   );
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
-  
+
   // Find the current variant based on selections
-  const colorOption = product.options?.find(opt => opt.type === 'color');
   const sizeOption = product.options?.find(opt => opt.type === 'size');
   
   const selectedSizeId = selectedSize 
@@ -46,10 +44,8 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
   
   // Truncate description to 100 words
   const truncateDescription = (html: string, wordLimit: number) => {
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = html;
-    const text = tempDiv.textContent || tempDiv.innerText || '';
-    const words = text.trim().split(/\s+/);
+    const text = html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+    const words = text.split(/\s+/);
     
     if (words.length <= wordLimit) {
       return { truncated: html, needsTruncation: false };
@@ -61,9 +57,18 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
       needsTruncation: true 
     };
   };
+
+  	const { truncated, needsTruncation } = truncateDescription(product.description, 100);
+	const displayDescription = isDescriptionExpanded ? product.description : truncated;
   
-  const { truncated, needsTruncation } = truncateDescription(product.description, 100);
-  const displayDescription = isDescriptionExpanded ? product.description : truncated;
+
+	// Calculates available sizes for specific color 
+	const sizesForSelectedColor = enabledVariants
+		.filter(v => v.options[0] === selectedColorId) // get variants of selected color
+		.map(v => v.options[1]) // Get their sizeId's
+		.map(sizeId => sizeOption?.values.find(s => s.id === sizeId)?.title) // map the sizeId to title ie: 'XL'
+		.filter((s): s is string => Boolean(s))
+
   
   // Get images for the current variant (filtered by color if selected)
   const displayImages = currentVariant 
@@ -153,6 +158,8 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
           selectedSize={selectedSize}
           onColorChange={setSelectedColorId}
           onSizeChange={setSelectedSize}
+		//   availableColorIds={availableColorIds}
+		  availableSizes={sizesForSelectedColor}
         />
 
         {/* Add to Cart Button */}

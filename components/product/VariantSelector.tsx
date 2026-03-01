@@ -89,12 +89,12 @@ export default function VariantSelector({
                   onClick={() => onSizeChange(size)}
                   disabled={!isAvailable}
                   className={`
-                    border-2 py-2 rounded-lg font-medium transition-all cursor-pointer
+                    border-2 py-2 rounded-lg font-medium transition-all
                     ${isSelected
-                      ? 'border-sky-500 bg-sky-50 text-sky-700'
+                      ? 'border-sky-500 bg-sky-50 text-sky-700 '
                       : 'border-gray-300 hover:border-gray-400 text-gray-900'
                     }
-                    ${!isAvailable ? 'opacity-40 cursor-not-allowed line-through' : ''}
+                    ${!isAvailable ? 'opacity-30 cursor-not-allowed line-through' : 'cursor-pointer'}
                   `}
                 >
                   {size}
