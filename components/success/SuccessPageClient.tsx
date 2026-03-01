@@ -23,7 +23,6 @@ export default function SuccessPageClient({ orderId, shippingAddress }: SuccessP
 	
 	const getGeoCode = async () => {
 		const geo = await geocodeAddress(shippingAddress)
-		console.log("geo", geo)
 		setGeocodedAddress(geo.geometry.coordinates)
 	}
 
