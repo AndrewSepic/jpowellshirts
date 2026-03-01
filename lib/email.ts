@@ -6,7 +6,7 @@ export interface SendOrderEmailParams {
   to: string;
   orderId: string;
   customerName: string;
-  items: [];
+  items: any[];
 }
 
 export async function sendOrderPlacedEmail({ to, orderId, customerName, items }: SendOrderEmailParams) {

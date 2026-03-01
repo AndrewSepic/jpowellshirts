@@ -3,8 +3,8 @@ import Image from 'next/image';
 
 const StaticImage = ({coordinates}: { coordinates?: number[] }) => {
 
-	if (coordinates?.length === 0) {
-		return;
+	if (!coordinates || coordinates.length === 0) {
+		return null;
 	}
 
 	return (

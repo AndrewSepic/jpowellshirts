@@ -36,7 +36,7 @@ export interface ShippingAddress {
 
 export default function CheckoutPage() {
   const router = useRouter()
-  const { items, getTotal, addressFeature } = useCart()
+  const { items, getTotal } = useCart()
   
   // Contact
   const [email, setEmail] = useState('')
@@ -143,7 +143,6 @@ export default function CheckoutPage() {
             items,
             shippingCost,
             shippingAddress,
-			addressFeature,
             shippingMethod: selectedShippingMethod,
             taxAmount: taxData.taxAmount,
             taxCalculationId: taxData.taxCalculationId,
@@ -164,7 +163,7 @@ export default function CheckoutPage() {
     }
 
     preparePayment()
-  }, [selectedShippingMethod, shippingAddress, items, shippingCost, clientSecret, addressFeature])
+  }, [selectedShippingMethod, shippingAddress, items, shippingCost, clientSecret])
 
   if (items.length === 0) {
     return null // Redirecting
