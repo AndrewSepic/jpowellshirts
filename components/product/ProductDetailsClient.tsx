@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import ProductImageCarousel from '@/components/product/ProductImageCarousel';
 import VariantSelector from '@/components/product/VariantSelector';

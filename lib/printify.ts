@@ -143,6 +143,7 @@ export async function getProduct(productId: string): Promise<PrintifyProduct | n
           'Authorization': `Bearer ${process.env.PRINTIFY_API_TOKEN}`,
           'Content-Type': 'application/json',
         },
+        next: { revalidate: 60 }, // cache for 60s to ensure consistent server/client renders
       }
     );
 

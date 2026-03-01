@@ -3,21 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <title>Your Order Confirmation</title>
-    <style>
-      body { font-family: Arial, sans-serif; color: #222; }
-      .container { max-width: 600px; margin: 0 auto; padding: 24px; background: #fff; border-radius: 8px; }
-      .header { font-size: 1.5em; margin-bottom: 16px; }
-      .footer { margin-top: 32px; font-size: 0.9em; color: #888; }
-    </style>
   </head>
-  <body>
-    <div class="container">
-      <div class="header">Thank you for your order, {{customerName}}!</div>
-      <p>Your order <strong>#{{orderId}}</strong> has been placed successfully.</p>
-	  <h3>Items</h3>
-	  <div>{{itemsHTML}}</div>
-      <p>We'll notify you when your order ships.</p>
-      <div class="footer">
+  <body style="font-family: Arial, sans-serif; color: #222; background: #f4f4f4; margin: 0; padding: 24px;">
+    <div style="max-width: 600px; margin: 0 auto; background: #fff; border-radius: 8px; padding: 32px;">
+      
+      <div style="font-size: 1.5em; font-weight: bold; margin-bottom: 8px;">Thank you for your order, {{customerName}}!</div>
+      <p style="margin-top: 0; color: #555;">Order <strong>#{{orderId}}</strong> has been placed successfully.</p>
+
+      <h3 style="border-bottom: 1px solid #eee; padding-bottom: 8px;">Order Summary</h3>
+
+      {{itemsHTML}}
+
+      <p style="margin-top: 24px;">We'll notify you when your order ships.</p>
+
+      <div style="margin-top: 32px; font-size: 0.85em; color: #999;">
         &copy; Powell Shirts
       </div>
     </div>
