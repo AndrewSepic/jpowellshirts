@@ -13,7 +13,7 @@ interface SuccessPageClientProps {
 
 export default function SuccessPageClient({ orderId, shippingAddress }: SuccessPageClientProps) {
   const { clearCart } = useCart();
-  const [ geocodedAddress, setGeocodedAddress ] = useState(null)
+  const [ geocodedAddress, setGeocodedAddress ] = useState<[]>([])
 
   useEffect(() => {
     // Clear cart on successful payment
@@ -24,7 +24,7 @@ export default function SuccessPageClient({ orderId, shippingAddress }: SuccessP
 	const getGeoCode = async () => {
 		const geo = await geocodeAddress(shippingAddress)
 		console.log("geo", geo)
-		setGeocodedAddress(geo)
+		setGeocodedAddress(geo.geometry.coordinates)
 	}
 
 	getGeoCode()

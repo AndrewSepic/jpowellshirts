@@ -32,9 +32,8 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
   );
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
-  
+
   // Find the current variant based on selections
-  const colorOption = product.options?.find(opt => opt.type === 'color');
   const sizeOption = product.options?.find(opt => opt.type === 'size');
   
   const selectedSizeId = selectedSize 
@@ -62,6 +61,14 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
   	const { truncated, needsTruncation } = truncateDescription(product.description, 100);
 	const displayDescription = isDescriptionExpanded ? product.description : truncated;
   
+
+	// Calculates available sizes for specific color 
+	const sizesForSelectedColor = enabledVariants
+		.filter(v => v.options[0] === selectedColorId) // get variants of selected color
+		.map(v => v.options[1]) // Get their sizeId's
+		.map(sizeId => sizeOption?.values.find(s => s.id === sizeId)?.title) // map the sizeId to title ie: 'XL'
+		.filter((s): s is string => Boolean(s))
+
   
   // Get images for the current variant (filtered by color if selected)
   const displayImages = currentVariant 
@@ -105,11 +112,6 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
     handleAddToCart();
     // Will redirect to cart, which can then go to checkout
   };
-
-  useEffect(() => {
-	
-
-  }, [selectedColorId])
 
   const canAddToCart = selectedColorId !== null && selectedSize !== null && currentVariant !== null;
 
@@ -156,8 +158,8 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
           selectedSize={selectedSize}
           onColorChange={setSelectedColorId}
           onSizeChange={setSelectedSize}
-		  availableColorIds={availableColorIds}
-		  availableSizes={availableSizes}
+		//   availableColorIds={availableColorIds}
+		  availableSizes={sizesForSelectedColor}
         />
 
         {/* Add to Cart Button */}
