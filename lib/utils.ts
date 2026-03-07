@@ -1,4 +1,4 @@
-import type { ShippingAddress } from '@/app/checkout/page'
+import type { ShippingAddress } from '@/lib/types'
 
 export function generateOrderId(): string {
   const timestamp = Date.now();

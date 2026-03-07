@@ -2,18 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { PrintifyProduct, PrintifyVariant } from '@/lib/printify';
-
-export interface CartItem {
-  productId: string;
-  variantId: number;
-  productTitle: string;
-  variantTitle: string;
-  price: number; // in dollars
-  imageUrl: string;
-  quantity: number;
-  colorName?: string;
-  sizeName?: string;
-}
+import { CartItem } from '@/lib/types';
 
 interface CartContextType {
   items: CartItem[];

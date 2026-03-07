@@ -22,17 +22,8 @@ const ShippingAddressForm = dynamic(() => import('@/components/checkout/Shipping
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
 
-export interface ShippingAddress {
-  first_name: string
-  last_name: string
-  email: string
-  country: string
-  region: string
-  address1: string
-  address2?: string
-  city: string
-  zip: string
-}
+import type { ShippingAddress } from '@/lib/types'
+export type { ShippingAddress } from '@/lib/types'
 
 export default function CheckoutPage() {
   const router = useRouter()

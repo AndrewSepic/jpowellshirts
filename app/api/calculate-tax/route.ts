@@ -1,15 +1,6 @@
 import { NextResponse } from 'next/server'
 import { stripe } from '../../../lib/stripe'
-import type { ShippingAddress } from '@/app/checkout/page'
-
-interface CartItem {
-  productId: string;
-  variantId: number;
-  productTitle: string;
-  variantTitle: string;
-  price: number;
-  quantity: number;
-}
+import type { CartItem, ShippingAddress } from '@/lib/types'
 
 interface TaxRequest {
   items: CartItem[];

@@ -10,19 +10,12 @@ if (!process.env.NEXT_PUBLIC_MAPBOX_TOKEN) {
 
 const MAPBOX_ACCESS_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
-interface ShippingAddress {
-  first_name: string;
-  last_name: string;
-  country: string;
-  region: string;
-  address1: string;
-  address2?: string;
-  city: string;
-  zip: string;
-}
+import type { ShippingAddress } from '@/lib/types';
+
+type AddressWithoutEmail = Omit<ShippingAddress, 'email'>;
 
 interface ShippingAddressFormProps {
-  onAddressConfirmed: (address: ShippingAddress) => void;
+  onAddressConfirmed: (address: AddressWithoutEmail) => void;
   isCalculating?: boolean;
 }
 
@@ -39,7 +32,7 @@ export default function ShippingAddressForm({ onAddressConfirmed, isCalculating 
     if (result.type === 'nochange' && formRef.current) {
       const formData = new FormData(formRef.current);
       
-      const address: ShippingAddress = {
+      const address: AddressWithoutEmail = {
         first_name: formData.get('first-name') as string,
         last_name: formData.get('last-name') as string,
         country: formData.get('country') as string || 'US',
