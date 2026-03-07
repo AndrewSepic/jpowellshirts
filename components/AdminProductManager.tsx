@@ -14,7 +14,6 @@ export default function AdminProductManager({ products }: AdminProductManagerPro
   const [errorMessages, setErrorMessages] = useState<Record<string, string>>({});
   const [publishedTimestamps, setPublishedTimestamps] = useState<Record<string, string>>({});
 
-  console.log(products)
   useEffect(() => {
     // Fetch published timestamps from API
     fetch('/api/admin/published-products')
