@@ -1,19 +1,7 @@
 import { NextResponse } from 'next/server'
 import { stripe } from '../../../lib/stripe'
 import { generateOrderId } from '../../../lib/utils'
-import type { ShippingAddress } from '@/app/checkout/page'
-
-interface CartItem {
-  productId: string;
-  variantId: number;
-  productTitle: string;
-  variantTitle: string;
-  price: number;
-  imageUrl: string;
-  colorName?: string;
-  sizeName?: string;
-  quantity: number;
-}
+import type { CartItem, ShippingAddress } from '@/lib/types'
 
 interface PaymentIntentRequest {
   items: CartItem[];

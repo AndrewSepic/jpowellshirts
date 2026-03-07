@@ -4,8 +4,7 @@ import path from 'path';
 export async function renderOrderPlacedTemplate(vars: { customerName: string; orderId: string, items: any[] }) {
   const templatePath = path.join(process.cwd(), 'emails', 'order-placed.html');
   let html = await fs.readFile(templatePath, 'utf-8');
-	
-  console.log("items before email rendering", vars.items)
+  
   const itemsHtml = vars.items.map(item => `
     <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 16px; border: 1px solid #eee; border-radius: 6px; overflow: hidden;">
       <tr>
