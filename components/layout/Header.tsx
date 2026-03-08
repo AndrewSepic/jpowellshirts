@@ -2,11 +2,11 @@ import Link from 'next/link';
 
 export default function Header() {
   return (
-    <header className="bg-white shadow-md">
+    <header className="bg-[#f4f7fa] border-b border-slate-200">
       <nav className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo/Brand */}
-          <Link href="/" className="text-2xl font-bold text-gray-900 hover:text-gray-700">
+          <Link href="/" className="text-4xl font-bold text-slate-800 hover:text-sky-600 transition-colors font-brand">
             JPowell Shirts
           </Link>
 
@@ -14,19 +14,19 @@ export default function Header() {
           <div className="flex items-center space-x-8">
             <Link 
               href="/" 
-              className="text-gray-700 hover:text-gray-900 transition-colors"
+              className="text-slate-600 hover:text-sky-700 transition-colors"
             >
               Shop
             </Link>
             <Link 
               href="/about" 
-              className="text-gray-700 hover:text-gray-900 transition-colors"
+              className="text-slate-600 hover:text-sky-700 transition-colors"
             >
               About
             </Link>
             <Link 
               href="/cart" 
-              className="flex items-center text-gray-700 hover:text-gray-900 transition-colors"
+              className="flex items-center text-slate-600 hover:text-sky-700 transition-colors"
             >
               <svg 
                 xmlns="http://www.w3.org/2000/svg" 

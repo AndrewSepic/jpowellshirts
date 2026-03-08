@@ -35,12 +35,12 @@ export default function ProductDetailsMobileLayout({
   };
 
   return (
-    <div className="flex flex-col bg-gray-50 min-h-screen">
+    <div className="flex flex-col bg-slate-50 min-h-screen">
 
       {/* Title + Price */}
       <div className="px-4 pt-4 pb-2 bg-white">
-        <h1 className="text-xl font-bold text-gray-900 leading-tight">{title}</h1>
-        <div className="text-2xl font-bold text-sky-500 mt-1">${currentPrice}</div>
+        <h1 className="text-xl font-bold text-slate-900 leading-tight font-brand">{title}</h1>
+        <div className="text-2xl font-bold text-sky-700 mt-1">${currentPrice}</div>
       </div>
 
       {/* Swipe Image Gallery — CSS scroll-snap, no library needed */}
@@ -76,7 +76,7 @@ export default function ProductDetailsMobileLayout({
                 key={index}
                 className={`rounded-full transition-all duration-200 ${
                   index === activeIndex
-                    ? 'w-2.5 h-2.5 bg-blue-300 opacity-100'
+                    ? 'w-2.5 h-2.5 bg-sky-600 opacity-100'
                     : 'w-2 h-2 bg-gray-300 opacity-40'
                 }`}
               />
@@ -103,7 +103,7 @@ export default function ProductDetailsMobileLayout({
             disabled={!canAddToCart}
             className={`w-full py-4 rounded-lg font-semibold text-lg transition-colors ${
               canAddToCart
-                ? 'bg-sky-500 text-white hover:bg-sky-600 cursor-pointer'
+                ? 'bg-sky-700 text-white hover:bg-sky-600 cursor-pointer'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
           >
@@ -115,7 +115,7 @@ export default function ProductDetailsMobileLayout({
             disabled={!canAddToCart}
             className={`w-full py-4 rounded-lg font-semibold text-lg transition-colors ${
               canAddToCart
-                ? 'bg-gray-800 text-white hover:bg-gray-900 cursor-pointer'
+                ? 'bg-gray-800 text-white hover:bg-slate-800 cursor-pointer'
                 : 'bg-gray-200 text-gray-400 cursor-not-allowed'
             }`}
           >
@@ -126,15 +126,15 @@ export default function ProductDetailsMobileLayout({
 
       {/* Description — intentionally below the fold */}
       <div className="px-4 py-4 bg-white mt-2 mb-8">
-        <h2 className="text-sm font-semibold text-gray-900 mb-2">About this product</h2>
+        <h2 className="text-sm font-semibold text-slate-900 mb-2">About this product</h2>
         <div
-          className="text-gray-700 leading-relaxed prose prose-sm max-w-none"
+          className="text-slate-700 leading-relaxed prose prose-sm max-w-none"
           dangerouslySetInnerHTML={{ __html: displayDescription }}
         />
         {needsTruncation && (
           <button
             onClick={onToggleDescription}
-            className="text-sky-500 hover:text-sky-600 font-medium text-sm mt-2 cursor-pointer"
+            className="text-sky-700 hover:text-sky-800 font-medium text-sm mt-2 cursor-pointer"
           >
             {isDescriptionExpanded ? 'Read Less' : 'Read More'}
           </button>

@@ -8,7 +8,7 @@ export default async function AdminPrintifyPage() {
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl font-bold text-slate-800 mb-2">
             Printify Product Manager
           </h1>
           <p className="text-gray-600">

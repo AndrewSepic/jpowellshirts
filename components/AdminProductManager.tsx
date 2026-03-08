@@ -132,7 +132,7 @@ export default function AdminProductManager({ products }: AdminProductManagerPro
                         />
                       </div>
                       <div>
-                        <div className="text-sm font-medium text-gray-900">
+                        <div className="text-sm font-medium text-slate-800">
                           {product.title}
                         </div>
                       </div>
@@ -170,7 +170,7 @@ export default function AdminProductManager({ products }: AdminProductManagerPro
                       className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                         status === 'loading' || status === 'published'
                           ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                          : 'bg-sky-500 text-white hover:bg-sky-600 cursor-pointer'
+                          : 'bg-sky-700 text-white hover:bg-sky-600 cursor-pointer'
                       }`}
                     >
                       {status === 'loading' ? 'Publishing...' : (status === 'update-needed' ? 'Update Published' : 'Set Published')}

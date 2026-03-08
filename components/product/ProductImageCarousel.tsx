@@ -14,8 +14,8 @@ export default function ProductImageCarousel({ images, productTitle }: ProductIm
 
   if (images.length === 0) {
     return (
-      <div className="bg-gray-100 rounded-lg aspect-square flex items-center justify-center">
-        <p className="text-gray-400">No image available</p>
+      <div className="bg-slate-100 rounded-lg aspect-square flex items-center justify-center">
+        <p className="text-slate-400">No image available</p>
       </div>
     );
   }
@@ -23,7 +23,7 @@ export default function ProductImageCarousel({ images, productTitle }: ProductIm
   return (
     <div className="flex flex-col gap-4">
       {/* Main Image */}
-      <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden">
+      <div className="relative aspect-square bg-slate-100 rounded-lg overflow-hidden">
         <Image
           src={images[selectedIndex].src}
           alt={productTitle}
@@ -42,7 +42,7 @@ export default function ProductImageCarousel({ images, productTitle }: ProductIm
             onClick={() => setSelectedIndex(index)}
             className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all flex-shrink-0 w-20 h-20 cursor-pointer ${
               selectedIndex === index 
-                ? 'border-sky-500 ring-2 ring-sky-200' 
+                ? 'border-sky-700 ring-2 ring-sky-200' 
                 : 'border-gray-200 hover:border-gray-300'
             }`}
           >

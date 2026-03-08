@@ -7,10 +7,10 @@ export default function ProductGallery({ products } :{products: DisplayProduct[]
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl font-bold text-slate-900 mb-4 font-brand">
             Celebrating Jerome Powell
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
             Show your appreciation for steady leadership, integrity and the importance of an independent Federal Reserve — especially when economic decisions require discipline, patience, and freedom from short-term influence.
           </p>
         </div>

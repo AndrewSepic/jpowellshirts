@@ -29,7 +29,7 @@ export default function VariantSelector({
       {/* Color Selection */}
       {colorOptions.length > 0 && (
         <div>
-          <label className="block text-sm font-semibold text-gray-900 mb-3">
+          <label className="block text-sm font-semibold text-slate-800 mb-3">
             Select Color
             {selectedColorId && (
               <span className="ml-2 font-normal text-gray-600">
@@ -51,7 +51,7 @@ export default function VariantSelector({
                   className={`
                     relative w-5 h-5 rounded-full transition-all
                     ${isSelected 
-                      ? 'ring-2 ring-sky-500 ring-offset-2' 
+                      ? 'ring-2 ring-sky-700 ring-offset-2' 
                       : 'ring-2 ring-gray-300 hover:ring-gray-400'
                     }
                     ${!isAvailable ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}
@@ -75,7 +75,7 @@ export default function VariantSelector({
       {/* Size Selection */}
       {sizeOptions.length > 0 && (
         <div>
-          <label className="block text-sm font-semibold text-gray-900 mb-3">
+          <label className="block text-sm font-semibold text-slate-800 mb-3">
             Select Size
           </label>
           <div className="grid grid-cols-5 gap-2">
@@ -91,8 +91,8 @@ export default function VariantSelector({
                   className={`
                     border-2 py-2 rounded-lg font-medium transition-all
                     ${isSelected
-                      ? 'border-sky-500 bg-sky-50 text-sky-700 '
-                      : 'border-gray-300 hover:border-gray-400 text-gray-900'
+                      ? 'border-sky-700 bg-sky-50 text-sky-800 '
+                      : 'border-gray-300 hover:border-gray-400 text-slate-800'
                     }
                     ${!isAvailable ? 'opacity-30 cursor-not-allowed line-through' : 'cursor-pointer'}
                   `}

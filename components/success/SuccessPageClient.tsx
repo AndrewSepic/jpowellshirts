@@ -31,7 +31,7 @@ export default function SuccessPageClient({ orderId, shippingAddress }: SuccessP
   }, []) 
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-slate-50 py-12">
       <div className="container mx-auto px-4 max-w-2xl">
         <div className="bg-white rounded-lg shadow-md p-8 md:p-12 text-center">
           {/* Success Icon */}
@@ -52,10 +52,10 @@ export default function SuccessPageClient({ orderId, shippingAddress }: SuccessP
           </div>
 
           {/* Success Message */}
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
+          <h1 className="text-3xl font-bold text-slate-900 mb-4 font-brand">
             Payment Successful!
           </h1>
-          <p className="text-lg text-gray-600 mb-2">
+          <p className="text-lg text-slate-600 mb-2">
             Thank you for your order. Your payment has been processed successfully.
           </p>
           
@@ -77,8 +77,8 @@ export default function SuccessPageClient({ orderId, shippingAddress }: SuccessP
 		  )}
 
           {/* Order Details */}
-          <div className="bg-gray-50 rounded-lg p-6 mb-8 text-left">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+          <div className="bg-slate-50 rounded-lg p-6 mb-8 text-left">
+            <h2 className="text-xl font-semibold text-slate-900 mb-4">
               What happens next?
             </h2>
             <ul className="space-y-3 text-gray-700">
@@ -95,7 +95,7 @@ export default function SuccessPageClient({ orderId, shippingAddress }: SuccessP
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/"
-              className="bg-sky-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-sky-600 transition-colors"
+              className="bg-sky-700 text-white px-8 py-3 rounded-lg font-semibold hover:bg-sky-600 transition-colors"
             >
               Continue Shopping
             </Link>

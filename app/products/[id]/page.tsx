@@ -21,9 +21,9 @@ export default async function ProductPage({
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Breadcrumb */}
         <div className="mb-6 text-sm text-gray-600">
-          <Link href="/" className="hover:text-gray-900">Home</Link>
+          <Link href="/" className="hover:text-slate-800">Home</Link>
           <span className="mx-2">/</span>
-          <span className="text-gray-900">{product.title}</span>
+          <span className="text-slate-800">{product.title}</span>
         </div>
 
         <ProductDetailsClient product={product} />

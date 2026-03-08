@@ -14,7 +14,7 @@ export default function ProductCard({ id, title, price, imageUrl, description }:
     <Link href={`/products/${id}`} className="group">
       <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
         {/* Product Image */}
-        <div className="relative w-full aspect-square bg-gray-100">
+        <div className="relative w-full aspect-square bg-slate-100">
           <Image
             src={imageUrl}
             alt={title}
@@ -26,7 +26,7 @@ export default function ProductCard({ id, title, price, imageUrl, description }:
 
         {/* Product Info */}
         <div className="p-4">
-          <h3 className="text-lg font-semibold text-gray-900 mb-1 group-hover:text-sky-500 transition-colors">
+          <h3 className="text-lg font-semibold text-slate-900 mb-1 group-hover:text-sky-700 transition-colors">
             {title}
           </h3>
           {description && (
@@ -36,7 +36,7 @@ export default function ProductCard({ id, title, price, imageUrl, description }:
             </p>
           )}
           <div className="flex items-center justify-between">
-            <span className="text-xl font-bold text-gray-900">
+            <span className="text-xl font-bold text-slate-900">
               ${price.toFixed(2)}
             </span>
           </div>

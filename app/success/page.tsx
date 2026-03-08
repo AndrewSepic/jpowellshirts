@@ -28,7 +28,7 @@ export default async function SuccessPage({
           <p className="text-gray-600 mb-6">
             Your payment is being processed. Please check back later.
           </p>
-          <Link href="/" className="text-sky-500 hover:underline">
+          <Link href="/" className="text-sky-700 hover:underline">
             Return to Home
           </Link>
         </div>
@@ -45,7 +45,7 @@ export default async function SuccessPage({
           <p className="text-gray-600 mb-6">
             Your payment was not completed. Please try again.
           </p>
-          <Link href="/cart" className="text-sky-500 hover:underline">
+          <Link href="/cart" className="text-sky-700 hover:underline">
             Return to Cart
           </Link>
         </div>

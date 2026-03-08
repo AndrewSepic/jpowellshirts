@@ -2,12 +2,12 @@ import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-300 mt-auto">
+    <footer className="bg-slate-800 text-gray-300 mt-auto">
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Brand Section */}
           <div>
-            <h3 className="text-white text-lg font-bold mb-4">J Powell Shirts</h3>
+            <h3 className="text-white text-2xl font-bold font-brand mb-4">J Powell Shirts</h3>
             <p className="text-sm">
               Because if J Powell can stand up to pressure, we can support him. Themed t-shirts for Federal Reserve enthusiasts.
             </p>

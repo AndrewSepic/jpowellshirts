@@ -34,14 +34,14 @@ function CartContent() {
         )}
 
         {/* Page Header */}
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Order Preview</h1>
+        <h1 className="text-3xl font-bold text-slate-800 mb-8">Order Preview</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column: Cart Items & Shipping */}
           <div className="lg:col-span-2 space-y-6">
             {/* Cart Items */}
             <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Your Items</h2>
+              <h2 className="text-xl font-semibold text-slate-800 mb-4">Your Items</h2>
               
               <div className="space-y-4">
                 {items.map((item) => (
@@ -54,7 +54,7 @@ function CartContent() {
                       />
                     </div>
                     <div className="flex-grow">
-                      <h3 className="font-semibold text-gray-900">{item.productTitle}</h3>
+                      <h3 className="font-semibold text-slate-800">{item.productTitle}</h3>
                       <p className="text-sm text-gray-600">{item.colorName} / {item.sizeName}</p>
                       <p className="text-sm text-gray-600 mt-1">${item.price.toFixed(2)} each</p>
                       
@@ -88,7 +88,7 @@ function CartContent() {
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="font-semibold text-gray-900">
+                      <p className="font-semibold text-slate-800">
                         ${(item.price * item.quantity).toFixed(2)}
                       </p>
                     </div>
@@ -102,7 +102,7 @@ function CartContent() {
               {/* Checkout Button */}
               <button
                 onClick={handleCheckout}
-                className="w-full bg-sky-500 text-white py-3 rounded-lg font-semibold hover:bg-sky-600 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer mt-4"
+                className="w-full bg-sky-700 text-white py-3 rounded-lg font-semibold hover:bg-sky-600 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer mt-4"
               >
                 {'Proceed to Checkout'}
               </button>
@@ -110,7 +110,7 @@ function CartContent() {
               {/* Back to Shopping Button */}
               <button
                 onClick={() => router.push('/')}
-                className="w-full bg-white border border-sky-500 text-sky-600 py-3 rounded-lg font-semibold hover:bg-sky-50 transition-colors mt-2 cursor-pointer"
+                className="w-full bg-white border border-sky-700 text-sky-700 py-3 rounded-lg font-semibold hover:bg-sky-50 transition-colors mt-2 cursor-pointer"
               >
                 Back to Shopping
               </button>

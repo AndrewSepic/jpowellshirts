@@ -35,7 +35,7 @@ export default function ShippingMethodSelector({
 
   return (
     <div className="space-y-3">
-      <h3 className="text-lg font-semibold text-gray-900">Shipping Method</h3>
+      <h3 className="text-lg font-semibold text-slate-800">Shipping Method</h3>
       <div className="space-y-2">
         {sortedMethods.map(([method, { cost, costCents }]) => {
           const details = methodDetails[method] || { label: method, deliveryTime: '' };
@@ -47,19 +47,19 @@ export default function ShippingMethodSelector({
               onClick={() => onMethodSelect(method, costCents)}
               className={`w-full p-4 rounded-lg border-2 transition-all text-left cursor-pointer ${
                 isSelected
-                  ? 'border-sky-500 bg-sky-50'
+                  ? 'border-sky-700 bg-sky-50'
                   : 'border-gray-200 hover:border-gray-300'
               }`}
             >
               <div className="flex justify-between items-start">
                 <div>
-                  <div className="font-semibold text-gray-900">{details.label}</div>
+                  <div className="font-semibold text-slate-800">{details.label}</div>
                   {details.deliveryTime && (
                     <div className="text-sm text-gray-600 mt-1">{details.deliveryTime}</div>
                   )}
                 </div>
                 <div className="text-right">
-                  <div className="font-bold text-gray-900">${cost.toFixed(2)}</div>
+                  <div className="font-bold text-slate-800">${cost.toFixed(2)}</div>
                 </div>
               </div>
             </button>

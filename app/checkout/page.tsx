@@ -14,8 +14,8 @@ const ShippingAddressForm = dynamic(() => import('@/components/checkout/Shipping
   ssr: false,
   loading: () => (
     <div className="flex items-center justify-center py-8">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-sky-600"></div>
-      <span className="ml-3 text-gray-600">Loading address form...</span>
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-sky-700"></div>
+      <span className="ml-3 text-slate-600">Loading address form...</span>
     </div>
   )
 })
@@ -161,16 +161,16 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-slate-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Checkout</h1>
+        <h1 className="text-3xl font-bold text-slate-900 mb-8 font-brand">Checkout</h1>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left Column - Forms */}
           <div className="space-y-6">
             {/* 1. Contact */}
             <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Contact</h2>
+              <h2 className="text-xl font-semibold text-slate-800 mb-4">Contact</h2>
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                   Email
@@ -180,7 +180,7 @@ export default function CheckoutPage() {
                   id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-700 focus:border-transparent"
                   placeholder="your@email.com"
                   required
                 />
@@ -189,7 +189,7 @@ export default function CheckoutPage() {
 
             {/* 2. Delivery */}
             <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Delivery</h2>
+              <h2 className="text-xl font-semibold text-slate-800 mb-4">Delivery</h2>
               <ShippingAddressForm 
                 onAddressConfirmed={handleAddressComplete}
                 isCalculating={isCalculatingShipping}
@@ -199,7 +199,7 @@ export default function CheckoutPage() {
             {/* 3. Shipping Method */}
             {Object.keys(shippingMethods).length > 0 && (
               <div className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">Shipping Method</h2>
+                <h2 className="text-xl font-semibold text-slate-800 mb-4">Shipping Method</h2>
                 <ShippingMethodSelector
                   methods={shippingMethods}
                   selectedMethod={selectedShippingMethod}
@@ -211,7 +211,7 @@ export default function CheckoutPage() {
             {/* 4. Payment */}
             {clientSecret && selectedShippingMethod && (
               <div className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">Payment</h2>
+                <h2 className="text-xl font-semibold text-slate-800 mb-4">Payment</h2>
                 <Elements stripe={stripePromise} options={{ clientSecret }}>
                   <CheckoutForm orderId={orderId} />
                 </Elements>
@@ -222,8 +222,8 @@ export default function CheckoutPage() {
             {isPreparingPayment && selectedShippingMethod && (
               <div className="bg-white rounded-lg shadow-md p-6">
                 <div className="flex items-center justify-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-sky-600"></div>
-                  <span className="ml-3 text-gray-600">Preparing payment...</span>
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-sky-700"></div>
+                  <span className="ml-3 text-slate-600">Preparing payment...</span>
                 </div>
               </div>
             )}
@@ -232,13 +232,13 @@ export default function CheckoutPage() {
           {/* Right Column - Order Summary (Sticky) */}
           <div className="lg:sticky lg:top-4 lg:self-start">
             <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Order Summary</h2>
+              <h2 className="text-xl font-semibold text-slate-800 mb-4">Order Summary</h2>
               
               {/* Items */}
               <div className="space-y-3 mb-6 max-h-64 overflow-y-auto">
                 {items.map((item) => (
                   <div key={`${item.productId}-${item.variantId}`} className="flex gap-3">
-                    <div className="w-16 h-16 bg-gray-100 rounded shrink-0">
+                    <div className="w-16 h-16 bg-slate-100 rounded shrink-0">
                       <img 
                         src={item.imageUrl} 
                         alt={item.productTitle}
@@ -246,11 +246,11 @@ export default function CheckoutPage() {
                       />
                     </div>
                     <div className="grow">
-                      <p className="text-sm font-medium text-gray-900">{item.productTitle}</p>
+                      <p className="text-sm font-medium text-slate-800">{item.productTitle}</p>
                       <p className="text-xs text-gray-600">{item.colorName} / {item.sizeName}</p>
                       <p className="text-xs text-gray-600">Qty: {item.quantity}</p>
                     </div>
-                    <p className="text-sm font-semibold text-gray-900">
+                    <p className="text-sm font-semibold text-slate-800">
                       ${(item.price * item.quantity).toFixed(2)}
                     </p>
                   </div>
@@ -276,7 +276,7 @@ export default function CheckoutPage() {
                     {isPreparingPayment ? 'Calculating...' : `$${taxAmount.toFixed(2)}`}
                   </span>
                 </div>
-                <div className="flex justify-between text-xl font-bold text-gray-900 pt-2 border-t">
+                <div className="flex justify-between text-xl font-bold text-slate-800 pt-2 border-t">
                   <span>Total</span>
                   <span>${total.toFixed(2)}</span>
                 </div>

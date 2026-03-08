@@ -36,20 +36,20 @@ export default function ProductDetailsDesktopLayout({
 
       {/* Right — Product details */}
       <div className="bg-white rounded-lg shadow-md p-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">{title}</h1>
+        <h1 className="text-3xl font-bold text-slate-900 mb-4 font-brand">{title}</h1>
 
-        <div className="text-3xl font-bold text-sky-500 mb-6">${currentPrice}</div>
+        <div className="text-3xl font-bold text-sky-700 mb-6">${currentPrice}</div>
 
         {/* Description */}
         <div className="mb-6">
           <div
-            className="text-gray-700 leading-relaxed prose prose-sm max-w-none"
+            className="text-slate-700 leading-relaxed prose prose-sm max-w-none"
             dangerouslySetInnerHTML={{ __html: displayDescription }}
           />
           {needsTruncation && (
             <button
               onClick={onToggleDescription}
-              className="text-sky-500 hover:text-sky-600 font-medium text-sm mt-2 cursor-pointer"
+              className="text-sky-700 hover:text-sky-800 font-medium text-sm mt-2 cursor-pointer"
             >
               {isDescriptionExpanded ? 'Read Less' : 'Read More'}
             </button>
@@ -74,7 +74,7 @@ export default function ProductDetailsDesktopLayout({
             disabled={!canAddToCart}
             className={`w-full py-4 rounded-lg font-semibold text-lg transition-colors ${
               canAddToCart
-                ? 'bg-sky-500 text-white hover:bg-sky-600 cursor-pointer'
+                ? 'bg-sky-700 text-white hover:bg-sky-600 cursor-pointer'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
           >
@@ -86,7 +86,7 @@ export default function ProductDetailsDesktopLayout({
             disabled={!canAddToCart}
             className={`w-full py-4 rounded-lg font-semibold text-lg transition-colors ${
               canAddToCart
-                ? 'bg-gray-800 text-white hover:bg-gray-900 cursor-pointer'
+                ? 'bg-gray-800 text-white hover:bg-slate-800 cursor-pointer'
                 : 'bg-gray-200 text-gray-400 cursor-not-allowed'
             }`}
           >
