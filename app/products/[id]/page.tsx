@@ -17,13 +17,13 @@ export default async function ProductPage({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-gray-50 py-8">
       <div className="container mx-auto px-4 max-w-6xl">
         {/* Breadcrumb */}
-        <div className="mb-6 text-sm text-gray-600">
-          <Link href="/" className="hover:text-slate-800">Home</Link>
+        <div className="mb-6 text-sm text-slate-500">
+          <Link href="/" className="hover:text-slate-600">Home</Link>
           <span className="mx-2">/</span>
-          <span className="text-slate-800">{product.title}</span>
+          <span className="text-slate-500">{product.title}</span>
         </div>
 
         <ProductDetailsClient product={product} />
