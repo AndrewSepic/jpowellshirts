@@ -1,3 +1,4 @@
+import ContactButton from '@/components/ContactButton';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -26,19 +27,19 @@ export default function About() {
               Our Story
             </h2>
             <p className="text-gray-700 leading-relaxed mb-4">
-              J Powell Shirts was born after the statement Federal Reserve Chair Jerome Powell <a className="text-sky-700"target="_blank" href="https://www.federalreserve.gov/newsevents/speech/powell20260111a.htm">released on January 11, 2026</a>. 
-			  It was apparent that the non-partisan body of economics professionals governing economic policy for all Americans was being pressured and intimidated. How should the American people respond when they see a U.S. 
-			  institution of integrity, diligence and professionalism known across the globe be threatened by the autocratic tendencies of a particular administration? One simple citizen had an idea to elevate one of the almost boring
-			  grand fatherly like figure of American civil service, Jerome Hayden Powell for his steadfast commitment to serve the American people and shepherd an economy that benefits
-			  all Americans.  And maybe monetary policy doesn't have to be boring.
-
-              If you are a Federal Reserve enthusiast, economics student, or finance professional you deserve apparel that celebrates your passion for sound monetary policy and the people who shape it.
+              J Powell Shirts was born out of a <a className="text-sky-700" target="_blank" href="https://www.federalreserve.gov/newsevents/speech/powell20260111a.htm">statement Federal Reserve Chair Jerome Powell released on January 11, 2026</a>.
+              It was a stark reminder that the non-partisan body of economists entrusted with governing monetary policy for all Americans was being pressured and intimidated.
+              When a U.S. institution of global standing — built on integrity, discipline, and professional independence — finds itself threatened by the autocratic impulses of a particular administration, how should ordinary people respond?
             </p>
-
+            <p className="text-gray-700 leading-relaxed mb-4">
+              One answer: celebrate the people holding the line. Jerome Hayden Powell — arguably one of the most quietly consequential figures in American civil service — deserved recognition
+              for his steadfast commitment to serve all Americans and shepherd an economy free from short-term political interference. And if that recognition happens to come on a t-shirt, all the better.
+            </p>
+            <p className="text-gray-700 leading-relaxed mb-4">
+              Maybe monetary policy doesn&apos;t have to be boring.
+            </p>
             <p className="text-gray-700 leading-relaxed">
-              Our exclusive collection of Jerome Powell themed t-shirts combines quality craftsmanship 
-              with designs that resonate with anyone who's ever anxiously awaited a FOMC meeting or 
-              debated the merits of quantitative easing.
+              If you are a Federal Reserve enthusiast, economics student, or finance professional — you deserve apparel that celebrates your passion for sound monetary policy and the people who shape it.
             </p>
           </section>
 
@@ -76,10 +77,10 @@ export default function About() {
             <h2 className="text-2xl font-semibold text-slate-800 mb-4">
               Get In Touch
             </h2>
-            <p className="text-gray-700 leading-relaxed">
-              Have questions, feedback, or design ideas? We'd love to hear from you. 
-              Email us at 
+            <p className="text-gray-700 leading-relaxed mb-6">
+              Have questions, feedback, or design ideas? We&apos;d love to hear from you.
             </p>
+            <ContactButton />
           </section>
         </div>
 

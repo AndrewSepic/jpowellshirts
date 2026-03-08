@@ -27,11 +27,6 @@ export default function Footer() {
                   About Us
                 </Link>
               </li>
-              <li>
-                <Link href="/shipping" className="text-sm hover:text-white transition-colors">
-                  Shipping Info
-                </Link>
-              </li>
             </ul>
           </div>
 
@@ -49,18 +44,13 @@ export default function Footer() {
                   Privacy Policy
                 </Link>
               </li>
-              <li>
-                <Link href="/terms" className="text-sm hover:text-white transition-colors">
-                  Terms of Service
-                </Link>
-              </li>
             </ul>
           </div>
         </div>
 
         {/* Copyright */}
         <div className="border-t border-gray-800 mt-8 pt-6 text-center text-sm">
-          <p>&copy; {new Date().getFullYear()} Powell Shirts. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} J Powell Shirts. All rights reserved.</p>
         </div>
       </div>
     </footer>

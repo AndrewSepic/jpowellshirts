@@ -4,6 +4,8 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { CartProvider } from "@/providers/CartContext";
+import { ContactModalProvider } from "@/providers/ContactModalContext";
+import ContactModal from "@/components/ContactModal";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,11 +45,14 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${playfairDisplay.variable} ${oleoScript.variable} antialiased flex flex-col min-h-screen`}
       >
         <CartProvider>
-          <Header />
-          <main className="flex-grow">
-            {children}
-          </main>
-          <Footer />
+          <ContactModalProvider>
+            <Header />
+            <main className="flex-grow">
+              {children}
+            </main>
+            <Footer />
+            <ContactModal />
+          </ContactModalProvider>
         </CartProvider>
       </body>
     </html>
