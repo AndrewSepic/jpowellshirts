@@ -19,6 +19,7 @@ export default function ProductDetailsDesktopLayout({
   selectedSize,
   onColorChange,
   onSizeChange,
+  isSingleVariant,
   canAddToCart,
   onAddToCart,
   onBuyNow,
@@ -57,15 +58,17 @@ export default function ProductDetailsDesktopLayout({
         </div>
 
         {/* Variant Selector */}
-        <VariantSelector
-          colorOptions={colorOptions}
-          sizeOptions={sizeOptions}
-          selectedColorId={selectedColorId}
-          selectedSize={selectedSize}
-          onColorChange={onColorChange}
-          onSizeChange={onSizeChange}
-          availableSizes={sizesForSelectedColor}
-        />
+        {!isSingleVariant && (
+          <VariantSelector
+            colorOptions={colorOptions}
+            sizeOptions={sizeOptions}
+            selectedColorId={selectedColorId}
+            selectedSize={selectedSize}
+            onColorChange={onColorChange}
+            onSizeChange={onSizeChange}
+            availableSizes={sizesForSelectedColor}
+          />
+        )}
 
         {/* Buttons */}
         <div className="mt-8 space-y-4">

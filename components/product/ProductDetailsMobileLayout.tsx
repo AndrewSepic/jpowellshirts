@@ -20,6 +20,7 @@ export default function ProductDetailsMobileLayout({
   selectedSize,
   onColorChange,
   onSizeChange,
+  isSingleVariant,
   canAddToCart,
   onAddToCart,
   onBuyNow,
@@ -87,17 +88,19 @@ export default function ProductDetailsMobileLayout({
 
       {/* Variants + Buttons — the core above-the-fold content */}
       <div className="px-4 py-4 bg-white mt-2">
-        <VariantSelector
-          colorOptions={colorOptions}
-          sizeOptions={sizeOptions}
-          selectedColorId={selectedColorId}
-          selectedSize={selectedSize}
-          onColorChange={onColorChange}
-          onSizeChange={onSizeChange}
-          availableSizes={sizesForSelectedColor}
-        />
+        {!isSingleVariant && (
+          <VariantSelector
+            colorOptions={colorOptions}
+            sizeOptions={sizeOptions}
+            selectedColorId={selectedColorId}
+            selectedSize={selectedSize}
+            onColorChange={onColorChange}
+            onSizeChange={onSizeChange}
+            availableSizes={sizesForSelectedColor}
+          />
+        )}
 
-        <div className="mt-5 space-y-3">
+        <div className={`space-y-3 ${!isSingleVariant ? 'mt-5' : ''}`}>
           <button
             onClick={onAddToCart}
             disabled={!canAddToCart}

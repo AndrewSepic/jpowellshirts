@@ -21,6 +21,9 @@ export interface ProductLayoutProps {
   onColorChange: (colorId: number) => void;
   onSizeChange: (size: string) => void;
 
+  // Variant display
+  isSingleVariant: boolean;
+
   // Cart actions
   canAddToCart: boolean;
   onAddToCart: () => void;

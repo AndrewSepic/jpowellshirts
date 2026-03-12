@@ -25,6 +25,8 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
   const colorOptions = getAvailableColorOptions(product);
   const sizeOptions = getAvailableSizes(product);
   const enabledVariants = getEnabledVariants(product);
+  const isSingleVariant = colorOptions.length === 0 && sizeOptions.length === 0;
+  const singleVariant = isSingleVariant ? (enabledVariants[0] ?? null) : null;
 
   // State
   const [selectedColorId, setSelectedColorId] = useState<number | null>(
@@ -38,7 +40,9 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
   const selectedSizeId = selectedSize
     ? sizeOption?.values.find(v => v.title === selectedSize)?.id || null
     : null;
-  const currentVariant = findVariantByOptions(product, selectedColorId, selectedSizeId);
+  const currentVariant = isSingleVariant
+    ? singleVariant
+    : findVariantByOptions(product, selectedColorId, selectedSizeId);
 
   // Derived — description truncation
   const truncateDescription = (html: string, wordLimit: number) => {
@@ -76,7 +80,8 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
 
   // Handlers
   const handleAddToCart = () => {
-    if (!currentVariant || !selectedColorId || !selectedSize) return;
+    if (!currentVariant) return;
+    if (!isSingleVariant && (!selectedColorId || !selectedSize)) return;
     const colorOption = colorOptions.find(c => c.id === selectedColorId);
     const imageUrl = displayImages[0]?.src || product.images[0]?.src || '';
     addItem({
@@ -87,14 +92,16 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
       price: currentVariant.price / 100,
       imageUrl,
       colorName: colorOption?.title,
-      sizeName: selectedSize,
+      sizeName: selectedSize ?? undefined,
     });
     router.push('/cart');
   };
 
   const handleBuyNow = () => handleAddToCart();
 
-  const canAddToCart = selectedColorId !== null && selectedSize !== null && currentVariant !== null;
+  const canAddToCart = isSingleVariant
+    ? currentVariant !== null
+    : selectedColorId !== null && selectedSize !== null && currentVariant !== null;
 
   // Shared props passed to both layout components
   const layoutProps = {
@@ -112,6 +119,7 @@ export default function ProductDetailsClient({ product }: ProductDetailsClientPr
     selectedSize,
     onColorChange: setSelectedColorId,
     onSizeChange: setSelectedSize,
+    isSingleVariant,
     canAddToCart,
     onAddToCart: handleAddToCart,
     onBuyNow: handleBuyNow,
