@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Logo from './Logo';
 
 export default function Header() {
   return (
@@ -6,8 +7,8 @@ export default function Header() {
       <nav className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo/Brand */}
-          <Link href="/" className=" text-2xl lg:text-4xl font-bold text-slate-800 hover:text-sky-600 transition-colors font-brand">
-            JPowell Shirts
+          <Link href="/" className="max-w-40 lg:max-w-60 font-bold text-sky-800 hover:text-sky-600 transition-colors font-brand">
+           <Logo />
           </Link>
 
           {/* Navigation Links */}

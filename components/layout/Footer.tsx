@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Logo from './Logo';
 
 export default function Footer() {
   return (
@@ -7,7 +8,9 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Brand Section */}
           <div>
-            <h3 className="text-white text-2xl font-bold font-brand mb-4">J Powell Shirts</h3>
+			<div className="text-white max-w-40 mb-4">
+            	<Logo />
+			</div>
             <p className="text-sm">
               Because if J Powell can stand up to pressure, we can support him. Themed t-shirts for Federal Reserve enthusiasts.
             </p>
