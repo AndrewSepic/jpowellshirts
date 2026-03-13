@@ -180,7 +180,7 @@ export default function CheckoutPage() {
                   id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-700 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 text-gray-500 rounded-lg focus:ring-2 focus:ring-sky-700 focus:border-transparent"
                   placeholder="your@email.com"
                   required
                 />

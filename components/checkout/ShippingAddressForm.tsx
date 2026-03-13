@@ -60,7 +60,7 @@ export default function ShippingAddressForm({ onAddressConfirmed, isCalculating 
             name="first-name"
             autoComplete="given-name"
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-700 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-700 focus:border-transparent text-gray-500"
           />
         </div>
         <div>
@@ -73,7 +73,7 @@ export default function ShippingAddressForm({ onAddressConfirmed, isCalculating 
             name="last-name"
             autoComplete="family-name"
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-700 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-700 focus:border-transparent text-gray-500"
           />
         </div>
       </div>
@@ -90,7 +90,7 @@ export default function ShippingAddressForm({ onAddressConfirmed, isCalculating 
             name="address-line1"
             autoComplete="address-line1"
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-700 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-700 focus:border-transparent text-gray-500"
           />
         </div>
       </AddressAutofill>
@@ -104,7 +104,7 @@ export default function ShippingAddressForm({ onAddressConfirmed, isCalculating 
           id="address-line2"
           name="address-line2"
           autoComplete="address-line2"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-700 focus:border-transparent"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-700 focus:border-transparent text-gray-500"
         />
       </div>
 
@@ -119,7 +119,7 @@ export default function ShippingAddressForm({ onAddressConfirmed, isCalculating 
             name="address-level2"
             autoComplete="address-level2"
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-700 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-700 focus:border-transparent text-gray-500"
           />
         </div>
         <div>
@@ -132,7 +132,7 @@ export default function ShippingAddressForm({ onAddressConfirmed, isCalculating 
             name="address-level1"
             autoComplete="address-level1"
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-700 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-700 focus:border-transparent text-gray-500"
           />
         </div>
       </div>
@@ -148,7 +148,7 @@ export default function ShippingAddressForm({ onAddressConfirmed, isCalculating 
             name="postal-code"
             autoComplete="postal-code"
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-700 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-700 focus:border-transparent text-gray-500"
           />
         </div>
         <div>
@@ -162,7 +162,7 @@ export default function ShippingAddressForm({ onAddressConfirmed, isCalculating 
             autoComplete="country"
             defaultValue="US"
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-700 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-700 focus:border-transparent text-gray-500"
           />
         </div>
       </div>
