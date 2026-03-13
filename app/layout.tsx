@@ -30,7 +30,7 @@ const oleoScript = Oleo_Script({
 });
 
 export const metadata: Metadata = {
-  title: "JPowell Shirts - Jerome Powell T-Shirts for fans of ann Independent Federal Reserve",
+  title: "JPowell Shirts - Jerome Powell Apparel for fans of an Independent Federal Reserve",
   description: "Premium Jerome Powell themed t-shirts for Federal Reserve enthusiasts",
 };
 
