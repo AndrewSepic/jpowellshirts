@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { stripe } from '../../lib/stripe';
+import { redis } from '@/lib/redis';
 import SuccessPageClient from '@/components/success/SuccessPageClient';
 
 export default async function SuccessPage({ 
@@ -54,7 +55,16 @@ export default async function SuccessPage({
   }
 
   const orderId = metadata?.orderId || order_id;
-  const shippingAddress = metadata?.shippingAddress ? JSON.parse(metadata.shippingAddress) : null;
+
+  // Fetch order data from Redis (stored at checkout time)
+  let shippingAddress = null;
+  if (orderId) {
+    const orderDataRaw = await redis.get(`order:${orderId}`);
+    if (orderDataRaw) {
+      const orderData = typeof orderDataRaw === 'string' ? JSON.parse(orderDataRaw) : orderDataRaw;
+      shippingAddress = orderData.shippingAddress ?? null;
+    }
+  }
 
   // We return a client component here on success so that we can 
   // use Hooks clearCart() and clear sessionStorage
