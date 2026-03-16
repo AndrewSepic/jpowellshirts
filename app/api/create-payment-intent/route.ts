@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
-import { stripe } from '../../../lib/stripe'
-import { generateOrderId } from '../../../lib/utils'
+import { stripe } from '@/lib/stripe'
+import { generateOrderId } from '@/lib/utils'
+import { redis } from '@/lib/redis'
 import type { CartItem, ShippingAddress } from '@/lib/types'
 
 interface PaymentIntentRequest {
@@ -37,31 +38,37 @@ export async function POST(request: Request) {
     // Generate unique order ID
     const orderId = generateOrderId()
 
-    // Create Payment Intent
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(total * 100), // Convert to cents
-      currency: 'usd',
-      automatic_payment_methods: {
-        enabled: true,
-      },
-      metadata: {
-        orderId,
-        taxCalculationId,
-        shippingMethod,
-        shippingAddress: JSON.stringify(shippingAddress),
-        items: JSON.stringify(items.map(item => ({
+    // Store full order data in Redis (expires in 24 hours)
+    await redis.set(
+      `order:${orderId}`,
+      JSON.stringify({
+        items: items.map(item => ({
           printifyProductId: item.productId,
           printifyVariantId: item.variantId,
           quantity: item.quantity,
           price: item.price,
-		  productTitle: item.productTitle,
-		  color: item.colorName,
-		  size: item.sizeName,
-        }))),
+          productTitle: item.productTitle,
+          color: item.colorName,
+          size: item.sizeName,
+        })),
+        shippingAddress,
+        shippingMethod,
         subtotal: subtotal.toFixed(2),
         shippingCost: shippingCost.toFixed(2),
         taxAmount: taxAmount.toFixed(2),
         total: total.toFixed(2),
+      }),
+      { ex: 86400 }
+    )
+
+    // Create Payment Intent — only orderId and taxCalculationId in metadata
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: Math.round(total * 100),
+      currency: 'usd',
+      automatic_payment_methods: { enabled: true },
+      metadata: {
+        orderId,
+        taxCalculationId,
       },
     })
 

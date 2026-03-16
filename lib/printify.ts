@@ -319,13 +319,23 @@ export async function calculateShipping(
 /**
  * Create an order in Printify
  */
+const SHIPPING_METHOD_MAP: Record<string, number> = {
+  standard: 1,
+  express: 2,
+  priority: 3,
+  printify_express: 4,
+  economy: 5,
+};
+
 export async function createOrder(
   orderId: string,
   items: PrintifyOrderItem[],
-  shippingAddress: PrintifyShippingAddress
+  shippingAddress: PrintifyShippingAddress,
+  shippingMethod: string = 'standard'
 ) {
   try {
     const shopId = process.env.PRINTIFY_SHOP_ID;
+    const shippingMethodId = SHIPPING_METHOD_MAP[shippingMethod] ?? 1;
     
     const orderData = {
       external_id: orderId,
@@ -335,7 +345,7 @@ export async function createOrder(
         variant_id: item.variant_id,
         quantity: item.quantity,
       })),
-      shipping_method: 1, // Standard shipping
+      shipping_method: shippingMethodId,
       send_shipping_notification: true,
       address_to: shippingAddress,
     };

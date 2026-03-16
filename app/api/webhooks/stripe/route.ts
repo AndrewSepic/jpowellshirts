@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import Stripe from 'stripe';
 import { stripe } from '@/lib/stripe';
+import { redis } from '@/lib/redis';
 import { createOrder, getProduct, getImagesForVariant } from '@/lib/printify';
 import { writeFileSync, readFileSync, existsSync } from 'fs';
 import { join } from 'path';
@@ -62,19 +63,25 @@ export async function POST(request: Request) {
 
     console.log('💳 Payment successful:', paymentIntent.id);
 
-    // Extract order data from payment intent metadata
-    const orderId = paymentIntent.metadata?.orderId;
-    const itemsJson = paymentIntent.metadata?.items;
-    const shippingAddressJson = paymentIntent.metadata?.shippingAddress;
-    const shippingMethod = paymentIntent.metadata?.shippingMethod;
+    // Get OrderId from Stripe payment intent metadata
+     const orderId = paymentIntent.metadata?.orderId;
 
-    if (!orderId || !itemsJson || !shippingAddressJson) {
-      console.error('Missing order data in payment intent metadata');
+    if (!orderId) {
+      console.error('Missing orderId in payment intent metadata');
       return NextResponse.json({ error: 'Missing metadata' }, { status: 400 });
     }
+ 	
+	// Retrieve full order data from Redis
+    const orderDataRaw = await redis.get(`order:${orderId}`);
 
-    const items = JSON.parse(itemsJson);
-    const shippingAddress = JSON.parse(shippingAddressJson);
+    if (!orderDataRaw) {
+      console.error('Order data not found in Redis for orderId:', orderId);
+      return NextResponse.json({ error: 'Order data not found' }, { status: 400 });
+    }
+
+    const orderData = typeof orderDataRaw === 'string' ? JSON.parse(orderDataRaw) : orderDataRaw;
+    const { items, shippingAddress, shippingMethod } = orderData;
+
 
     // Prepare Printify order data
     const printifyItems = items.map((item: any) => ({
@@ -100,7 +107,7 @@ export async function POST(request: Request) {
     try {
       // Create order in Printify
       console.log('📦 Creating Printify order for:', orderId);
-      await createOrder(orderId, printifyItems, printifyAddress);
+      await createOrder(orderId, printifyItems, printifyAddress, shippingMethod);
 
 	  try {
 		// Enrich items with image URLs from Printify (kept out of Stripe metadata to avoid 500 char limit)
@@ -123,6 +130,10 @@ export async function POST(request: Request) {
 	  }
 
       console.log('✅ Order successfully sent to Printify:', orderId);
+	  
+	  // Clean up Redis entry
+	  await redis.del(`order:${orderId}`)
+
     } catch (error: any) {
       console.error('Failed to process Printify order:', error);
       logFailedOrder(orderId, paymentIntent.id, error.message, {
