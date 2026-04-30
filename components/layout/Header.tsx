@@ -12,7 +12,7 @@ export default function Header() {
           </Link>
 
           {/* Navigation Links */}
-          <div className="flex items-center space-x-8">
+          <div className="flex items-center space-x-4 md:space-x-8">
             <Link 
               href="/" 
               className="text-slate-600 hover:text-sky-700 transition-colors"
