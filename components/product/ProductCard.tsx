@@ -6,12 +6,12 @@ interface ProductCardProps {
   title: string;
   price: number;
   imageUrl: string;
-  description?: string;
+  description: string;
 }
 
 export default function ProductCard({ id, title, price, imageUrl, description }: ProductCardProps) {
   return (
-    <Link href={`/products/${id}`} className="group">
+    <Link href={`/products/${id}?title=${encodeURIComponent(title)}&price=${price}&imageUrl=${encodeURIComponent(imageUrl)}`} className="group">
       <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
         {/* Product Image */}
         <div className="relative w-full aspect-square bg-slate-100">
