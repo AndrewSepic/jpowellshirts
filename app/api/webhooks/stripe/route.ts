@@ -53,7 +53,7 @@ export async function POST(request: Request) {
       process.env.STRIPE_WEBHOOK_SECRET!
     );
   } catch (err: any) {
-    console.error('Webhook signature verification failed:', err.message);
+    console.error('[STRIPE] Webhook signature verification failed:', err.message);
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
   }
 
@@ -61,24 +61,26 @@ export async function POST(request: Request) {
   if (event.type === 'payment_intent.succeeded') {
     const paymentIntent = event.data.object as Stripe.PaymentIntent;
 
-    console.log('💳 Payment successful:', paymentIntent.id);
+    console.log('[STRIPE] 💳 Payment successful:', paymentIntent.id);
 
     // Get OrderId from Stripe payment intent metadata
      const orderId = paymentIntent.metadata?.orderId;
 
     if (!orderId) {
-      console.error('Missing orderId in payment intent metadata');
+      console.error('[STRIPE] Missing orderId in payment intent metadata');
       return NextResponse.json({ error: 'Missing metadata' }, { status: 400 });
     }
- 	
+
 	// Retrieve full order data from Redis
+    console.log('[UPSTASH] Fetching order:', orderId);
     const orderDataRaw = await redis.get(`order:${orderId}`);
 
     if (!orderDataRaw) {
-      console.error('Order data not found in Redis for orderId:', orderId);
+      console.error('[UPSTASH] Order data not found in Redis for orderId:', orderId);
       return NextResponse.json({ error: 'Order data not found' }, { status: 400 });
     }
 
+    console.log('[UPSTASH] ✅ Order retrieved');
     const orderData = typeof orderDataRaw === 'string' ? JSON.parse(orderDataRaw) : orderDataRaw;
     const { items, shippingAddress, shippingMethod } = orderData;
 
@@ -106,7 +108,7 @@ export async function POST(request: Request) {
 
     try {
       // Create order in Printify
-      console.log('📦 Creating Printify order for:', orderId);
+      console.log('[PRINTIFY] 📦 Creating order for:', orderId);
       await createOrder(orderId, printifyItems, printifyAddress, shippingMethod);
 
 	  try {
@@ -126,16 +128,17 @@ export async function POST(request: Request) {
 			items: enrichedItems
 		});
 	  } catch(err) {
-		console.error("Problem sending customer order confirmation email: ", err)
+		console.error("[MAILGUN] Problem sending customer order confirmation email: ", err)
 	  }
 
-      console.log('✅ Order successfully sent to Printify:', orderId);
-	  
+      console.log('[PRINTIFY] ✅ Order successfully sent:', orderId);
+
 	  // Clean up Redis entry
 	  await redis.del(`order:${orderId}`)
+	  console.log('[UPSTASH] ✅ Order data cleaned up:', orderId)
 
     } catch (error: any) {
-      console.error('Failed to process Printify order:', error);
+      console.error('[PRINTIFY] Failed to process order:', error);
       logFailedOrder(orderId, paymentIntent.id, error.message, {
         items: printifyItems,
         shippingAddress: printifyAddress,

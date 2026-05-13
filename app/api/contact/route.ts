@@ -32,7 +32,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ ok: true });
   } catch (error) {
-    console.error('Contact form error:', error);
+    console.error('[MAILGUN] Contact form error:', error);
     return NextResponse.json({ error: 'Failed to send message' }, { status: 500 });
   }
 }

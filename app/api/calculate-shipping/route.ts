@@ -23,6 +23,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    console.log('[PRINTIFY] Calculating shipping for', lineItems.length, 'item(s) to', address.zip);
     const shippingCosts = await calculateShipping(lineItems, {
       ...address,
       email: 'customer@example.com', // Placeholder - not used for shipping calculation
@@ -40,9 +41,10 @@ export async function POST(request: NextRequest) {
       return acc;
     }, {} as Record<string, { cost: number; costCents: number }>);
 
+    console.log('[PRINTIFY] ✅ Shipping calculated');
     return NextResponse.json(formattedCosts);
   } catch (error) {
-    console.error('Shipping calculation error:', error);
+    console.error('[PRINTIFY] Shipping calculation error:', error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to calculate shipping' },
       { status: 500 }

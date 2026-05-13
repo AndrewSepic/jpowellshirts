@@ -14,12 +14,14 @@ export async function geocodeAddress(shippingAddress: ShippingAddress) {
 		.filter(Boolean)
 		.join('+');
 		
-	try {		
+	try {
+		console.log('[MAPBOX] Geocoding address:', [city, region].filter(Boolean).join(', '));
 		const response = await fetch(`https://api.mapbox.com/search/geocode/v6/forward?q=${query}&access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`);
 		const json = await response.json();
+		console.log('[MAPBOX] ✅ Geocoded:', json.features[0]?.properties?.full_address || json.features[0]?.place_name || 'no match');
 		return json.features[0];
 	} catch(err) {
-		console.error("Failed to geocode Address: ", err);
+		console.error("[MAPBOX] Failed to geocode Address: ", err);
 		return null;
 	}
 }

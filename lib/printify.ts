@@ -125,7 +125,7 @@ export async function getProducts(): Promise<PrintifyProduct[]> {
     const data = await response.json();
     return data.data || [];
   } catch (error) {
-    console.error('Failed to fetch Printify products:', error);
+    console.error('[PRINTIFY] Failed to fetch products:', error);
     throw error;
   }
 }
@@ -153,7 +153,7 @@ export async function getProduct(productId: string): Promise<PrintifyProduct | n
 
     return await response.json();
   } catch (error) {
-    console.error('Failed to fetch Printify product:', error);
+    console.error('[PRINTIFY] Failed to fetch product:', error);
     return null;
   }
 }
@@ -280,14 +280,7 @@ export async function calculateShipping(
   try {
     const shopId = process.env.PRINTIFY_SHOP_ID;
     const url = `${PRINTIFY_API_URL}/shops/${shopId}/orders/shipping.json`;
-    
-    console.log('Printify shipping URL:', url);
-    console.log('Shop ID:', shopId);
-    console.log('Request body:', JSON.stringify({
-      line_items: lineItems,
-      address_to: address,
-    }, null, 2));
-    
+
     const response = await fetch(
       url,
       {
@@ -302,7 +295,6 @@ export async function calculateShipping(
         }),
       }
     );
-	console.log("res", response)
 
     if (!response.ok) {
       const errorData = await response.json();
@@ -311,7 +303,7 @@ export async function calculateShipping(
 
     return await response.json();
   } catch (error) {
-    console.error('Failed to calculate shipping:', error);
+    console.error('[PRINTIFY] Failed to calculate shipping:', error);
     throw error;
   }
 }
@@ -368,10 +360,10 @@ export async function createOrder(
     }
 
     const result = await response.json();
-    console.log('✅ Printify order created:', result.id);
+    console.log('[PRINTIFY] ✅ Order created:', result.id);
     return result;
   } catch (error) {
-    console.error('Failed to create Printify order:', error);
+    console.error('[PRINTIFY] Failed to create order:', error);
     throw error;
   }
 }
