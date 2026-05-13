@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
     const data = await response.json();
     return NextResponse.json({ success: true, data });
   } catch (error) {
-    console.error('Publishing error:', error);
+    console.error('[PRINTIFY] Publishing error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

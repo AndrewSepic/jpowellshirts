@@ -43,6 +43,7 @@ export async function POST(request: Request) {
     }
 
     // Calculate tax using Stripe Tax Calculations API
+    console.log('[STRIPE] Calculating tax for', lineItems.length, 'line item(s)')
     const calculation = await stripe.tax.calculations.create({
       currency: 'usd',
       line_items: lineItems,
@@ -59,6 +60,7 @@ export async function POST(request: Request) {
       },
     })
 
+    console.log('[STRIPE] ✅ Tax calculated: $' + (calculation.tax_amount_exclusive / 100).toFixed(2))
     // Return tax amount and breakdown
     return NextResponse.json({
       taxAmount: calculation.tax_amount_exclusive / 100, // Convert back to dollars
@@ -66,7 +68,7 @@ export async function POST(request: Request) {
       breakdown: calculation.tax_breakdown,
     })
   } catch (err: any) {
-    console.error('Tax calculation error:', err)
+    console.error('[STRIPE] Tax calculation error:', err)
     return NextResponse.json(
       { error: err.message || 'Failed to calculate tax' },
       { status: err.statusCode || 500 }

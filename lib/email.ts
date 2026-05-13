@@ -26,8 +26,8 @@ export async function sendOrderPlacedEmail({ to, orderId, customerName, items }:
 		html,
   	});
 
-    console.log(data); // logs response data
+    console.log('[MAILGUN] ✅ Order email sent to', to, '(id:', data.id + ')');
   } catch (error) {
-    console.log(error); //logs any error
+    console.error('[MAILGUN] Order email error:', error);
   }
 }

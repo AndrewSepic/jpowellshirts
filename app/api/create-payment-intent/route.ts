@@ -39,6 +39,7 @@ export async function POST(request: Request) {
     const orderId = generateOrderId()
 
     // Store full order data in Redis (expires in 24 hours)
+    console.log('[UPSTASH] Storing order:', orderId)
     await redis.set(
       `order:${orderId}`,
       JSON.stringify({
@@ -62,6 +63,7 @@ export async function POST(request: Request) {
     )
 
     // Create Payment Intent — only orderId and taxCalculationId in metadata
+    console.log('[STRIPE] Creating payment intent for $' + total.toFixed(2))
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(total * 100),
       currency: 'usd',
@@ -72,12 +74,13 @@ export async function POST(request: Request) {
       },
     })
 
-    return NextResponse.json({ 
+    console.log('[STRIPE] ✅ Payment intent created:', paymentIntent.id)
+    return NextResponse.json({
       clientSecret: paymentIntent.client_secret,
-      orderId 
+      orderId
     })
   } catch (err: any) {
-    console.error('Payment Intent error:', err)
+    console.error('[STRIPE] Payment Intent error:', err)
     return NextResponse.json(
       { error: err.message },
       { status: err.statusCode || 500 }

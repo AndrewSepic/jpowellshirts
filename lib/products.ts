@@ -35,7 +35,7 @@ export async function getAllProducts(): Promise<Product[]> {
       material: '100% Premium Cotton',
     }));
   } catch (error) {
-    console.error('Failed to fetch products:', error);
+    console.error('[PRINTIFY] Failed to fetch products:', error);
     // Return empty array on error
     return [];
   }
